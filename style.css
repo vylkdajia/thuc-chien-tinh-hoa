@@ -1,0 +1,266 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Định nghĩa các biến CSS */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #28a745;
+    --warning-color: #ffcc00;
+    --danger-color: #dc3545;
+    --text-light: #ffffff;
+    --text-dark: #333333;
+    --background-light: #f1f1f1;
+    --background-dark: #f8f8f8;
+}
+
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
+
+/* Container Styling */
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+/* Sections */
+.question-section, .info-section {
+    background-color: var(--text-light);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.question-section {
+    width: 65%;
+}
+
+.info-section {
+    width: 30%;
+}
+
+/* Question Section */
+.question {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.question img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.answer-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 15px;
+    border: 1px solid var(--background-light);
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation Buttons */
+.nav-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+.mark-button {
+    background-color: var(--warning-color);
+    color: var(--text-dark);
+}
+
+.mark-button:hover {
+    background-color: #e6b800;
+}
+
+.nav-button {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+.nav-button:hover {
+    background-color: #0056b3;
+}
+
+/* Info Section */
+.note {
+    color: var(--danger-color);
+    font-size: 14px;
+}
+
+.status {
+    color: var(--secondary-color);
+}
+
+.number-buttons {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.number-buttons button {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    background-color: var(--background-light);
+    border-radius: 50%;
+    font-size: 16px;
+    color: var(--text-dark);
+    transition: background-color 0.3s ease;
+}
+
+.number-buttons button.active {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+.number-buttons button.marked {
+    background-color: var(--warning-color);
+}
+
+.number-buttons button.answered {
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+}
+
+.number-buttons button:hover {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    background-color: var(--background-light);
+    border-radius: 25px;
+    margin-top: 20px;
+    position: relative;
+    height: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar-inner {
+    height: 100%;
+    background-color: var(--secondary-color);
+    width: 0%;
+    border-radius: 25px;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 14px;
+    line-height: 20px;
+    transition: width 0.3s ease;
+}
+
+/* Tabs & Video Section */
+.tabs {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    background-color: var(--background-light);
+    border: 1px solid var(--background-light);
+}
+
+.tab-button.active {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    font-weight: bold;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+#video-list {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#video-list li {
+    cursor: pointer;
+    border: 1px solid var(--background-light);
+    padding: 5px;
+    text-align: center;
+    width: 120px;
+    background-color: var(--background-light);
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#video-list li:hover {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+#video-player {
+    text-align: center;
+}
+
+/* Checkboxes */
+#checkboxes-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+#checkboxes-container input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .question-section,
+    .info-section {
+        width: 100%;
+    }
+
+    .number-buttons {
+        justify-content: center;
+    }
+}
