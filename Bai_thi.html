@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thực Chiến Tinh Hoa TSA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+
+</head>
+<body>
+    <div class="container">
+
+        <div class="question-section">
+            <h2>TSA - Phần thi Tư duy toán học</h2>
+            <div class="question">
+                <img src="" alt="Câu hỏi">
+            </div>
+            <input type="text" class="answer-input">
+            <div class="nav-buttons">
+                <button class="mark-button">Đánh dấu câu chưa chắc chắn</button>
+                <button class="nav-button" onclick="navigateQuestion('prev')">Câu trước</button>
+                <button class="nav-button" onclick="navigateQuestion('next')">Câu tiếp</button>
+            </div>
+            <p>Thời gian đã dùng cho câu hiện tại: <span class="time-used">0:00</span></p>
+        </div>
+
+        <div class="info-section">
+            <h3>Thông tin thí sinh</h3>
+            <p>Họ tên: <strong id="studentName">Nguyễn Văn A</strong></p>
+            <p>Thời gian còn lại: <span class="time-remaining">60:00</span></p>
+
+            <div class="progress-bar">
+                <div class="progress-bar-inner">0/40</div>
+            </div>
+                      <div class="number-buttons">
+                <!-- Buttons will be dynamically added here -->
+            </div>
+            <button class="nav-button" onclick="submitAnswers()">Nộp bài</button>
+            <p class="note">Lưu ý: Thường xuyên theo dõi tình trạng kết nối.</p>
+            <p class="status">Kết nối máy chủ: <span style="color: green;">Đang kết nối</span></p>
+        </div>
+    </div>
+
+    <div id="chart-container" style="display: none; margin: 20px;">
+        <h3>Thống kê thời gian sử dụng cho từng câu</h3>
+        <canvas id="timeChart"></canvas>
+    </div>
+
+    <div id="answer-container" style="display: none;">
+    	<div class="tabs">
+        	<button class="tab-button active" onclick="showTab('answer-file')">File đáp án</button>
+	        <button class="tab-button" onclick="showTab('youtube-video')">Video chữa đề</button>
+    	</div>
+    	<div class="tab-content" id="answer-file">
+        	<!-- Nơi hiển thị file đáp án -->
+        	<iframe src="answers.pdf" width="100%" height="500px"></iframe>
+    	</div>
+
+    	<div class="tab-content" id="youtube-video" style="display: none;">
+    		<ul id="video-list">
+        	<!-- Danh sách các video sẽ được tạo động -->
+    		</ul>
+
+    		<div id="video-player">
+        		<!-- Khung video chính để phát video -->
+        		<iframe id="youtube-player" width="560" height="315" src="" 
+            		title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; 
+            		clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    		</div>
+	</div>
+
+
+
+    <h4>Đánh giá kết quả</h4>
+    <div id="checkboxes-container">
+        <!-- Các checkbox sẽ được tạo tự động -->
+    </div>
+    <p>Tổng điểm: <span id="total-score">0</span>/40</p>
+</div>
+
+<script>
+    window.onload = function() {
+        const fullName = localStorage.getItem('fullName');
+        const examChoice = localStorage.getItem('examChoice');
+        
+        if (fullName) {
+            document.getElementById('studentName').textContent = fullName;
+        }
+        
+        // Display the selected exam (if exists)
+        if (examChoice) {
+            console.log("Exam Choice: " + examChoice); // Debug log for exam choice
+        } else {
+            console.log("No exam choice selected.");
+        }
+    }
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
