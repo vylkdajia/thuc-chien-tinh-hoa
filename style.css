@@ -1,3 +1,9 @@
+.logo {
+    display: block; /* Giúp logo hiển thị đúng kích thước */
+    max-width: 150px; /* Đặt kích thước tối đa cho logo */
+    height: auto; /* Giữ tỷ lệ hình ảnh */
+}
+
 /* Reset CSS */
 * {
     margin: 0;
