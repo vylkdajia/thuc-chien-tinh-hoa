@@ -319,6 +319,9 @@ const videos = {
     "3": [
         { id: "QzNmj_0lX2Q", title: "Chữa đề phần 1" },
 	{ id: "8EDolMaCNts", title: "Chữa đề phần 2" }
+    ],
+    "4": [
+        { id: "05_jpeuE5GQ", title: "Chữa đề phần 1" }
     ]
 };
 
