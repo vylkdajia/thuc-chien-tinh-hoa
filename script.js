@@ -1,4 +1,4 @@
-
+	let numberTest = 4;
         let currentQuestionIndex = 0;
         let totalTimeRemaining = 3600; // 1 hour in seconds
         let questionTimer, totalTimer;
@@ -158,7 +158,7 @@ function formatTimeForChart(seconds) {
         // Assuming answers and examChoice are already stored in localStorage
 function loadQuestion(index) {
     const examChoice = localStorage.getItem('examChoice'); // Get the exam choice from localStorage
-    if (!examChoice) {
+    if (examChoice == -1) {
         alert("Không có thông tin đề thi. Vui lòng chọn đề thi.");
         return;
     }
@@ -166,6 +166,10 @@ function loadQuestion(index) {
     // Adjust question source based on the chosen exam
     const questionElement = document.querySelector('.question img');
     questionElement.src = `TSA_De_${examChoice}/c${index + 1}.png`; // Dynamically set question image based on exam choice
+    
+    if (examChoice == 0){
+	questionElement.src = `TSA_De_${Math.floor(Math.random()* numberTest) + 1}/c${index+1}.png`;
+    }
 
     const answerInput = document.querySelector('.answer-input');
     answerInput.value = answers[index] || '';

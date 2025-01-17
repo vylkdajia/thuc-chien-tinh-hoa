@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Page</title>
+    <link rel="stylesheet" href="quiz_style.css">
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="logo.png" alt="Logo TSA" title="Quay về trang chủ">
+        </a>
+        <h1>Đề Thi Ngẫu Nhiên</h1>
+    </header>
+
+    <div class="setup-container">
+        <label for="total-questions">Nhập số lượng câu hỏi: </label>
+        <input type="number" id="total-questions" min="1" value="5"> 
+        <label for="time-per-question">Thời gian mỗi câu (giây): </label>
+        <input type="number" id="time-per-question" min="1" value="30"> 
+        <button class="navigation-button" onclick="startQuiz()">Bắt đầu</button>
+    </div>
+
+    <div class="quiz-container" style="display: none;">
+        <div class="question-number">Câu hỏi: <span id="current-question">1</span>/<span id="total-question-count">5</span></div>
+        <div class="timer">Thời gian còn lại: <span id="time-left">30</span> giây</div>
+        <img src="image1.jpg" alt="Question Image" class="question-image">
+        <input type="text" class="answer-input" placeholder="Nhập đáp án của bạn" id="answer-input" onkeydown="if(event.key === 'Enter') nextQuestion()">
+        <button class="navigation-button" onclick="nextQuestion()">Chuyển câu</button>
+    </div>
+
+    <div class="results-container" id="results-container" style="display: none;">
+        <h2>Kết quả bài kiểm tra</h2>
+        <div id="results"></div>
+        <button class="navigation-button" onclick="restartQuiz()">Làm lại</button>
+    </div>
+
+    <script src="quiz_script.js"></script>
+</body>
+</html>

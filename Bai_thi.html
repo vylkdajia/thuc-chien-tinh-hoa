@@ -9,7 +9,7 @@
 
 </head>
 <body>
-    <a href="index.html">
+    <a href="index.html" style="display: inline-block;">
         <img src="logo.png" alt="Logo của bạn" class="logo">
     </a>
     <div class="container">
@@ -92,7 +92,7 @@
         }
         
         // Display the selected exam (if exists)
-        if (examChoice) {
+        if (examChoice != -1) {
             console.log("Exam Choice: " + examChoice); // Debug log for exam choice
         } else {
             console.log("No exam choice selected.");

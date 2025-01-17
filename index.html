@@ -19,18 +19,16 @@
             padding: 20px 0;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-	
-	header {
-    	    display: flex;
-    	    align-items: center;
-    	    justify-content: center;
-    	    gap: 10px; /* Khoảng cách giữa logo và tiêu đề */
-	}
-	header img {
-	    height: 150px; 
-    	    cursor: pointer; /* Con trỏ sẽ thay đổi khi di chuột qua logo */
-	}
-
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        header img {
+            height: 150px;
+            cursor: pointer;
+        }
         header h1 {
             font-size: 36px;
             font-weight: bold;
@@ -103,13 +101,19 @@
             const fullName = document.getElementById('fullName').value;
             const examChoice = document.getElementById('examChoice').value;
 
-            if (fullName && examChoice) {
+            if (fullName && examChoice !== "-1") {
                 // Lưu thông tin vào localStorage
                 localStorage.setItem('fullName', fullName);
-                localStorage.setItem('examChoice', examChoice); // Save the selected exam choice
-                
-                // Chuyển sang trang thứ hai
-                window.location.href = "Bai_thi.html"; // Redirect to the second page
+                localStorage.setItem('examChoice', examChoice);
+
+                // Chuyển trang dựa trên lựa chọn đề thi
+                if (examChoice === "0") {
+                    // Chuyển đến trang đề ngẫu nhiên
+                    window.location.href = "quiz_random.html";
+                } else {
+                    // Chuyển đến trang bài thi
+                    window.location.href = "Bai_thi.html";
+                }
             } else {
                 alert("Vui lòng điền đầy đủ các thông tin bắt buộc!");
             }
@@ -119,11 +123,10 @@
 <body>
     <header>
         <a href="index.html">
-            <img src="logo.png" alt="Logo TSA" style="height: 150px; vertical-align: middle; margin-right: 10px;">
+            <img src="logo.png" alt="Logo TSA">
         </a>
         <h1>Phòng thi TSA</h1>
     </header>
-
 
     <div class="form-container">
         <h2>Nhập Thông Tin Cá Nhân</h2>
@@ -154,11 +157,12 @@
 
             <label for="examChoice">Chọn đề thi <span style="color:red;">*</span>:</label>
             <select id="examChoice" name="examChoice" required>
-                <option value="">Chọn một đề thi</option>
+                <option value="-1">Chọn một đề thi</option>
+                <option value="0">Đề ngẫu nhiên</option>
                 <option value="1">Đề thi 1</option>
                 <option value="2">Đề thi 2</option>
                 <option value="3">Đề thi 3</option>
-		<option value="4">Đề thi 4</option>
+                <option value="4">Đề thi 4</option>
             </select><br>
 
             <input type="submit" value="Gửi">
