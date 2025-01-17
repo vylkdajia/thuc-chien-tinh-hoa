@@ -87,8 +87,8 @@ function showResults() {
         const imageSrc = result.imageSrc;
         resultsDiv.innerHTML += `
             <div class="result-item">
-                <div>Câu ${result.question}: Đáp án - ${result.answer || 'Không trả lời'} | Thời gian: ${result.timeTaken} giây</div>
-                <img src="${imageSrc}" alt="Câu hỏi ${result.question}" class="question-image">
+		<img src="${imageSrc}" alt="Câu hỏi ${result.question}" class="question-image">
+                <div>Câu ${result.question}: trả lời { ${result.answer || 'Không trả lời'} } | Thời gian: ${result.timeTaken} giây</div>
             </div>
         `;
     });
