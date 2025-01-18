@@ -326,6 +326,12 @@ const videos = {
     ],
     "4": [
         { id: "05_jpeuE5GQ", title: "Chữa đề phần 1" }
+    ],
+    "6": [
+        { id: "_8aui5Rsyjk", title: "Chữa đề phần 1" }
+    ], 
+    "7": [
+        { id: "GGciIMrCQLw", title: "Chữa đề phần 1" }
     ]
 };
 

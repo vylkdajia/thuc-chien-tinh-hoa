@@ -1,4 +1,4 @@
-const questionFolders = ['TSA_De_1', 'TSA_De_2', 'TSA_De_3', 'TSA_De_4'];  // Cập nhật thư mục khi có thêm
+const questionFolders = ['TSA_De_1', 'TSA_De_2', 'TSA_De_3', 'TSA_De_4', 'TSA_De_5', 'TSA_De_6', 'TSA_De_7'];  // Cập nhật thư mục khi có thêm
 let currentQuestion = 1;
 let totalQuestions = 0;
 let timePerQuestion = 30;
