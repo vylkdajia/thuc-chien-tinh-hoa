@@ -8,9 +8,10 @@ const questionFolders = [
     { numQuestions: 40, folderName: 'TSA_De_7' },
 
     { numQuestions: 50, folderName: 'HSA_De_1' },
+    { numQuestions: 50, folderName: 'HSA_De_2' },
 
     { numQuestions: 40, folderName: 'De_Rand_1' },
-    { numQuestions: 15, folderName: 'De_Rand_2' }
+    { numQuestions: 27, folderName: 'De_Rand_2' }
 
 
 ];  // Cập nhật thư mục khi có thêm
