@@ -167,9 +167,6 @@ function loadQuestion(index) {
     const questionElement = document.querySelector('.question img');
     questionElement.src = `TSA_De_${examChoice}/c${index + 1}.png`; // Dynamically set question image based on exam choice
     
-    if (examChoice == 0){
-	questionElement.src = `TSA_De_${Math.floor(Math.random()* numberTest) + 1}/c${index+1}.png`;
-    }
 
     const answerInput = document.querySelector('.answer-input');
     answerInput.value = answers[index] || '';

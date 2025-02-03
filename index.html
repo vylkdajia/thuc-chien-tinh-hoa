@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phòng thi TSA</title>
+    <title>Phòng luyện thi</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -96,28 +96,31 @@
     </style>
     <script>
         function handleSubmit(event) {
-            event.preventDefault();
-            
-            const fullName = document.getElementById('fullName').value;
-            const examChoice = document.getElementById('examChoice').value;
+    event.preventDefault();
+    
+    const fullName = document.getElementById('fullName').value;
+    // Chuyển đổi giá trị examChoice từ chuỗi sang số để so sánh
+    const examChoice = Number(document.getElementById('examChoice').value);
 
-            if (fullName && examChoice !== "-1") {
-                // Lưu thông tin vào localStorage
-                localStorage.setItem('fullName', fullName);
-                localStorage.setItem('examChoice', examChoice);
+    // Lưu thông tin vào localStorage
+    localStorage.setItem('fullName', fullName);
+    localStorage.setItem('examChoice', examChoice);
 
-                // Chuyển trang dựa trên lựa chọn đề thi
-                if (examChoice === "0") {
-                    // Chuyển đến trang đề ngẫu nhiên
-                    window.location.href = "quiz_random.html";
-                } else {
-                    // Chuyển đến trang bài thi
-                    window.location.href = "Bai_thi.html";
-                }
-            } else {
-                alert("Vui lòng điền đầy đủ các thông tin bắt buộc!");
-            }
-        }
+    // Chuyển trang dựa trên lựa chọn đề thi
+    if (examChoice === 0) {
+        // examChoice bằng 0: chuyển đến trang đề ngẫu nhiên
+        window.location.href = "quiz_random.html";
+    } else if (examChoice > 0) {
+        // examChoice > 0: chuyển đến trang bài thi TSA
+        window.location.href = "Bai_thi_TSA.html";
+    } else if (examChoice < 0) {
+        // examChoice < 0: chuyển đến trang bài thi HSA
+        window.location.href = "Bai_thi_HSA.html";
+    }
+}
+
+
+
     </script>
 </head>
 <body>
@@ -125,7 +128,7 @@
         <a href="index.html">
             <img src="logo.png" alt="Logo TSA">
         </a>
-        <h1>Phòng thi TSA</h1>
+        <h1>Phòng luyện thi</h1>
     </header>
 
     <div class="form-container">
@@ -134,38 +137,18 @@
             <label for="fullName">Họ và tên <span style="color:red;">*</span>:</label>
             <input type="text" id="fullName" name="fullName" required><br>
 
-            <label for="nickname">Biệt danh:</label>
-            <input type="text" id="nickname" name="nickname"><br>
-
-            <label for="dob">Ngày sinh:</label>
-            <input type="date" id="dob" name="dob"><br>
-
-            <label for="gender">Giới tính:</label><br>
-            <input type="radio" id="male" name="gender" value="Nam">
-            <label for="male">Nam</label><br>
-            <input type="radio" id="female" name="gender" value="Nữ">
-            <label for="female">Nữ</label><br><br>
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email"><br>
-
-            <label for="phone">Số điện thoại:</label>
-            <input type="tel" id="phone" name="phone"><br>
-
-            <label for="address">Địa chỉ:</label>
-            <textarea id="address" name="address" rows="4"></textarea><br>
-
             <label for="examChoice">Chọn đề thi <span style="color:red;">*</span>:</label>
             <select id="examChoice" name="examChoice" required>
-                <option value="-1">Chọn một đề thi</option>
-                <option value="0">Đề ngẫu nhiên</option>
-                <option value="1">Đề thi 1</option>
-                <option value="2">Đề thi 2</option>
-                <option value="3">Đề thi 3</option>
-                <option value="4">Đề thi 4</option>
-		<option value="5">Đề thi 5</option>
-		<option value="6">Đề thi 6</option>
-		<option value="7">Đề thi 7</option>
+                <option value="0">Ngẫu nhiên</option>
+                <option value="1">Đề thi 1 (TSA)</option>
+                <option value="2">Đề thi 2 (TSA)</option>
+                <option value="3">Đề thi 3 (TSA)</option>
+                <option value="4">Đề thi 4 (TSA)</option>
+		<option value="5">Đề thi 5 (TSA)</option>
+		<option value="6">Đề thi 6 (TSA)</option>
+		<option value="7">Đề thi 7 (TSA)</option>
+		<option value="-1">Đề thi 1 (HSA)</option>
+
             </select><br>
 
             <input type="submit" value="Gửi">

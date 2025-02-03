@@ -1,4 +1,20 @@
-const questionFolders = ['TSA_De_1', 'TSA_De_2', 'TSA_De_3', 'TSA_De_4', 'TSA_De_5', 'TSA_De_6', 'TSA_De_7'];  // Cập nhật thư mục khi có thêm
+const questionFolders = [
+    { numQuestions: 40, folderName: 'TSA_De_1' },
+    { numQuestions: 40, folderName: 'TSA_De_2' },
+    { numQuestions: 40, folderName: 'TSA_De_3' },
+    { numQuestions: 40, folderName: 'TSA_De_4' },
+    { numQuestions: 40, folderName: 'TSA_De_5' },
+    { numQuestions: 40, folderName: 'TSA_De_6' },
+    { numQuestions: 40, folderName: 'TSA_De_7' },
+
+    { numQuestions: 50, folderName: 'HSA_De_1' },
+
+    { numQuestions: 40, folderName: 'De_Rand_1' },
+    { numQuestions: 15, folderName: 'De_Rand_2' }
+
+
+];  // Cập nhật thư mục khi có thêm
+
 let currentQuestion = 1;
 let totalQuestions = 0;
 let timePerQuestion = 30;
@@ -11,11 +27,12 @@ function startQuiz() {
     timePerQuestion = parseInt(document.getElementById('time-per-question').value);
 
     if (totalQuestions > 0 && timePerQuestion > 0) {
-        // Chọn các hình ảnh ngẫu nhiên từ tất cả thư mục
+        // Chọn các hình ảnh ngẫu nhiên từ tất cả các thư mục
         selectedImages = getRandomImagesFromAllFolders(questionFolders, totalQuestions);
         document.querySelector('.setup-container').style.display = 'none';
         document.querySelector('.quiz-container').style.display = 'block';
         document.getElementById('total-question-count').textContent = totalQuestions;
+        document.getElementById('current-question').textContent = currentQuestion;
         document.querySelector('.question-image').src = selectedImages[currentQuestion - 1];
         startTimer();
     } else {
@@ -27,10 +44,12 @@ function startQuiz() {
 function getRandomImagesFromAllFolders(folders, totalQuestions) {
     let allImages = [];
 
-    // Lặp qua các thư mục để lấy tất cả các ảnh
+    // Lặp qua các thư mục để lấy tất cả các ảnh theo số lượng của từng thư mục
     folders.forEach(folder => {
-        const folderImages = Array.from({ length: 40 }, (_, index) => `${folder}/c${index + 1}.png`);
-        allImages = [...allImages, ...folderImages];
+        const folderImages = Array.from({ length: folder.numQuestions }, (_, index) => {
+            return `${folder.folderName}/c${index + 1}.png`;
+        });
+        allImages.push(...folderImages);
     });
 
     // Xáo trộn danh sách hình ảnh và lấy ra số lượng ảnh ngẫu nhiên tương ứng với số câu hỏi
@@ -53,7 +72,9 @@ function startTimer() {
 
 function nextQuestion() {
     clearInterval(timerInterval);
-    saveAnswerAndNext(timePerQuestion - parseInt(document.getElementById('time-left').textContent));
+    // Tính thời gian đã dùng dựa vào thời gian còn lại hiện tại
+    const elapsedTime = timePerQuestion - parseInt(document.getElementById('time-left').textContent);
+    saveAnswerAndNext(elapsedTime);
 }
 
 function saveAnswerAndNext(elapsedTime) {
@@ -87,7 +108,7 @@ function showResults() {
         const imageSrc = result.imageSrc;
         resultsDiv.innerHTML += `
             <div class="result-item">
-		<img src="${imageSrc}" alt="Câu hỏi ${result.question}" class="question-image">
+                <img src="${imageSrc}" alt="Câu hỏi ${result.question}" class="question-image">
                 <div>Câu ${result.question}: trả lời { ${result.answer || 'Không trả lời'} } | Thời gian: ${result.timeTaken} giây</div>
             </div>
         `;

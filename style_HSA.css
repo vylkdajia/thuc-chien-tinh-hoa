@@ -1,0 +1,156 @@
+/* Kích thước của logo */
+.logo {
+    width: 110px;
+    height: 110px;
+}
+
+/* Thiết lập cho toàn bộ trang */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f8ff;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 200px;
+    background-color: #428bca;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow-y: auto;
+}
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.question-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.question-list li {
+    padding: 10px;
+    border-bottom: 1px solid #3067a5;
+    cursor: pointer;
+}
+.question-list li.answered {
+    font-weight: bold;
+    background-color: #3067a5;
+}
+
+/* Main Content */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* Header với cấu trúc chia làm 3 phần:
+   - header-left: chứa logo (căn trái)
+   - header-center: chứa tiêu đề và mô tả (căn giữa)
+   - header-right: chứa đồng hồ đếm giờ (căn phải) */
+.header {
+    background-color: #428bca;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Phần chứa logo và tiêu đề bên trái */
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+/* Cách định dạng cho logo nếu cần khoảng cách so với tiêu đề */
+.header-left .logo {
+    margin-right: 10px;
+}
+
+/* Phần tiêu đề (chứa heading và mô tả) */
+.header-center {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.header-center h1 {
+    margin: 0;
+    font-size: 1.8em;
+}
+.header-center p {
+    margin: 0;
+    font-size: 1em;
+    color: #e0e0e0;
+}
+
+/* Đồng hồ đếm giờ */
+.header-right {
+    position: relative;
+}
+.timer {
+    background-color: #fff;
+    color: #428bca;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Container cho phần nội dung chính */
+.container {
+    padding: 20px;
+    background: white;
+}
+
+/* Định dạng cho câu hỏi */
+.question {
+    margin-bottom: 20px;
+}
+.question img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+/* Đáp án */
+.answer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.answer input {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Nút Nộp bài */
+.submit {
+    text-align: center;
+    margin-top: 20px;
+}
+.submit button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #428bca;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.submit button:hover {
+    background-color: #3067a5;
+}
