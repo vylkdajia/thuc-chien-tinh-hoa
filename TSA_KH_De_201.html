@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Kỳ thi đánh giá tư duy – Nộp bài và kiểm tra đáp án</title>
+  <style>
+    /* --------------------------
+       CÁC ĐỊNH DẠNG CHUNG
+    -------------------------- */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    /* Phần logo ở bên trái */
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+    #logo {
+      height: 40px;
+      margin-right: 10px;
+    }
+    header a.home-link {
+      text-decoration: none;
+    }
+    header button {
+      background-color: #4CAF50;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    header button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+    /* -------------------------------
+       Thanh điều hướng trang (toàn bộ kỳ thi)
+    ------------------------------- */
+    #page-nav {
+      background: #f7f7f7;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      text-align: center;
+    }
+    #page-nav button {
+      margin: 0 5px;
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+    }
+    #page-nav button.active {
+      background-color: #c8e6c9; /* trang đang hoạt động: xanh nhạt */
+    }
+    /* -------------------------------
+       Container chứa các trang
+    ------------------------------- */
+    #pages-container {
+      display: none; /* hiển thị khi load xong */
+    }
+    .page {
+      display: none;
+      height: calc(100vh - 120px); /* trừ header + nav */
+    }
+    .page.active {
+      display: flex;
+    }
+    /* -------------------------------
+       Panel bên trong mỗi trang
+    ------------------------------- */
+    .left-panel, .right-panel {
+      flex: 1;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .left-panel {
+      border-right: 1px solid #ccc;
+    }
+    /* -------------------------------
+       Thanh điều hướng câu hỏi trong mỗi trang
+    ------------------------------- */
+    .question-nav {
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+    }
+    .question-nav button {
+      margin: 0 3px;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+    }
+    .question-nav button.answered {
+      background-color: #c8e6c9;
+    }
+    .question-nav button.marked {
+      background-color: #fff176;
+    }
+    .question-nav button.active {
+      border: 2px solid #333;
+    }
+    /* -------------------------------
+       Định dạng cho từng câu hỏi
+    ------------------------------- */
+    .question {
+      margin-bottom: 30px;
+      padding: 10px;
+      border: 1px solid #eee;
+      background: #fafafa;
+      position: relative;
+    }
+    .question h3 {
+      margin-top: 0;
+    }
+    /* Nút đánh dấu cho câu hỏi */
+    .mark-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+      background-color: #eee;
+    }
+    .mark-btn.marked {
+      background-color: #fff176;
+    }
+    /* Phần hiển thị phản hồi sau khi kiểm tra đáp án */
+    .feedback {
+      margin-top: 10px;
+      padding: 5px;
+    }
+    .feedback.correct {
+      background-color: #c8e6c9;
+      color: #256029;
+    }
+    .feedback.incorrect {
+      background-color: #ffcdd2;
+      color: #c62828;
+    }
+    /* -------------------------------
+       Một số style cho phần kéo – thả (Câu 4)
+    ------------------------------- */
+    .drag-item {
+      display: inline-block;
+      padding: 10px;
+      margin: 5px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      cursor: move;
+    }
+    .drop-area {
+      border: 2px dashed #ccc;
+      padding: 20px;
+      margin-top: 10px;
+      min-height: 50px;
+      background-color: #fff;
+    }
+    /* --------------------------
+       Đáp án tóm tắt (cuối trang)
+    -------------------------- */
+    #answer-key {
+      padding: 20px;
+      background: #eef;
+      border-top: 2px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER: LOGO, TIMER & NỘP BÀI -->
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="home-link">
+        <img src="logo.png" alt="Logo" id="logo">
+      </a>
+      <!-- Bạn có thể thay đổi "logo.png" thành đường dẫn thực tế -->
+    </div>
+    <div id="timer">Thời gian: 60:00</div>
+    <button id="submit-btn">Nộp bài</button>
+  </header>
+  
+  <!-- THANH ĐIỀU HƯỚNG ĐỀ (TRANG) -->
+  <div id="page-nav">
+    <button data-page="phy1" class="active">Vật Lý 1</button>
+    <button data-page="phy2">Vật Lý 2</button>
+    <button data-page="phy3">Vật Lý 3</button>
+    <button data-page="chem1">Hóa Học 1</button>
+    <button data-page="chem2">Hóa Học 2</button>
+    <button data-page="bio1">Sinh Học 1</button>
+    <button data-page="bio2">Sinh Học 2</button>
+    <button data-page="bio3">Sinh Học 3</button>
+  </div>
+  
+  <!-- CONTAINER CHỨA CÁC TRANG (ĐỀ) -->
+  <div id="pages-container">
+    <!-- ======================================
+         VẬT LÝ 1: CHUYỂN ĐỘNG NÉM NGANG (phy1)
+         ====================================== -->
+    <div class="page active" id="phy1">
+      <!-- Left Panel: Thông tin khoa học & ứng dụng -->
+      <div class="left-panel">
+        <h2>BÀI VẬT LÝ 1: CHUYỂN ĐỘNG NÉM NGANG</h2>
+        <h3>A. Thông tin khoa học</h3>
+        <p>
+          <strong>Mô tả hiện tượng:</strong><br>
+          Vật được ném theo phương ngang từ độ cao <em>h</em> với vận tốc ban đầu <em>v₀</em>. Bỏ qua lực cản không khí:<br>
+          – Vận tốc ngang không đổi: <em>vₓ = v₀</em>.<br>
+          – Vận tốc đứng tăng: <em>vᵧ = g · t</em>.<br>
+          – Thời gian rơi: <em>t = √(2h/g)</em>.<br>
+          – Tầm bay xa: <em>R = v₀ · t</em>.
+        </p>
+        <p>
+          <strong>Bảng số liệu thí nghiệm (mô phỏng):</strong><br>
+          <table border="1" cellspacing="0" cellpadding="4">
+            <tr>
+              <th>Lần bắn</th>
+              <th>Độ cao h (m)</th>
+              <th>v₀ (m/s)</th>
+              <th>R thực (m)</th>
+              <th>t (s)</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>1,2</td>
+              <td>2,0</td>
+              <td>2,0</td>
+              <td>0,49</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>1,2</td>
+              <td>3,0</td>
+              <td>3,0</td>
+              <td>0,49</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>2,0</td>
+              <td>2,0</td>
+              <td>2,9</td>
+              <td>0,64</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>2,0</td>
+              <td>3,0</td>
+              <td>4,3</td>
+              <td>0,64</td>
+            </tr>
+          </table>
+        </p>
+        <p>
+          <strong>Ứng dụng thực tế:</strong><br>
+          – Tính quỹ đạo ném bóng, vòi cứu hỏa…<br>
+          – Xác định khoảng cách an toàn khi ném đồ cứu trợ.
+        </p>
+      </div>
+      <!-- Right Panel: 7 Câu hỏi -->
+      <div class="right-panel">
+        <!-- Thanh điều hướng câu hỏi -->
+        <div class="question-nav" id="qnav-phy1">
+          <button data-target="q1-phy1">Câu 1</button>
+          <button data-target="q2-phy1">Câu 2</button>
+          <button data-target="q3-phy1">Câu 3</button>
+          <button data-target="q4-phy1">Câu 4</button>
+          <button data-target="q5-phy1">Câu 5</button>
+          <button data-target="q6-phy1">Câu 6</button>
+          <button data-target="q7-phy1">Câu 7</button>
+        </div>
+        <!-- Câu 1: (Mức 1, dạng (1)) -->
+        <div class="question" id="q1-phy1">
+          <h3>Câu 1</h3>
+          <p>Công thức tính thời gian rơi của vật ném ngang (bỏ qua lực cản) là:</p>
+          <form>
+            <input type="radio" name="q1-phy1" value="A"> A. t = √(2h/g)<br>
+            <input type="radio" name="q1-phy1" value="B"> B. t = h/v₀<br>
+            <input type="radio" name="q1-phy1" value="C"> C. t = √(v₀/g)<br>
+            <input type="radio" name="q1-phy1" value="D"> D. t = 2h/v₀<br>
+          </form>
+          <button class="mark-btn" data-question="q1-phy1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q1-phy1"></div>
+        </div>
+        <!-- Câu 2: (Mức 1, dạng (2)) -->
+        <div class="question" id="q2-phy1">
+          <h3>Câu 2</h3>
+          <p>Xét các phát biểu sau về chuyển động ném ngang (bỏ qua cản gió). Đánh dấu Đúng (D) hoặc Sai (S):<br>
+             1) Vận tốc theo phương ngang là không đổi.<br>
+             2) Gia tốc theo phương ngang bằng g.<br>
+             3) Thời gian rơi phụ thuộc vào độ cao ném.<br>
+             4) Tầm bay xa phụ thuộc cả v₀ và h.
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q2-phy1-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q2-phy1-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>3) </label>
+            <select name="q2-phy1-3">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>4) </label>
+            <select name="q2-phy1-4">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q2-phy1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q2-phy1"></div>
+        </div>
+        <!-- Câu 3: (Mức 2, dạng (3)) -->
+        <div class="question" id="q3-phy1">
+          <h3>Câu 3</h3>
+          <p>Dựa vào bảng số liệu, khi giữ độ cao không đổi nhưng tăng v₀, những yếu tố nào tăng?</p>
+          <form>
+            <input type="checkbox" name="q3-phy1" value="A"> A. Thời gian rơi t.<br>
+            <input type="checkbox" name="q3-phy1" value="B"> B. Tầm bay xa R.<br>
+            <input type="checkbox" name="q3-phy1" value="C"> C. Vận tốc đứng khi chạm đất.<br>
+            <input type="checkbox" name="q3-phy1" value="D"> D. Quãng đường đi theo phương ngang.
+          </form>
+          <button class="mark-btn" data-question="q3-phy1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q3-phy1"></div>
+        </div>
+        <!-- Câu 4: (Mức 2, dạng (4)) -->
+        <div class="question" id="q4-phy1">
+          <h3>Câu 4</h3>
+          <p>Trong chuyển động ném ngang (bỏ qua cản), quỹ đạo của vật là một ………………</p>
+          <input type="text" name="q4-phy1" placeholder="Nhập đáp án (2–4 từ)">
+          <button class="mark-btn" data-question="q4-phy1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q4-phy1"></div>
+        </div>
+        <!-- Câu 5: (Mức 3, dạng (1)) -->
+        <div class="question" id="q5-phy1">
+          <h3>Câu 5</h3>
+          <p>Một vật được ném ngang từ độ cao 2 m với vận tốc đầu 4 m/s, lấy g = 9,8 m/s². Bỏ qua cản, tầm bay xa lý thuyết xấp xỉ:</p>
+          <form>
+            <input type="radio" name="q5-phy1" value="A"> A. 4,8 m<br>
+            <input type="radio" name="q5-phy1" value="B"> B. 3,6 m<br>
+            <input type="radio" name="q5-phy1" value="C"> C. 2,7 m<br>
+            <input type="radio" name="q5-phy1" value="D"> D. 1,8 m<br>
+          </form>
+          <button class="mark-btn" data-question="q5-phy1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q5-phy1"></div>
+        </div>
+        <!-- Câu 6: (Mức 3, dạng (2)) -->
+        <div class="question" id="q6-phy1">
+          <h3>Câu 6</h3>
+          <p>Giả sử có ý kiến: “Khi bỏ qua lực cản, tăng v₀ sẽ làm vật rơi lâu hơn.” Với mô hình bỏ qua lực cản:</p>
+          <form>
+            <label>1) Thời gian rơi không phụ thuộc v₀: </label>
+            <select name="q6-phy1-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) Càng ném mạnh thì vật rơi càng lâu: </label>
+            <select name="q6-phy1-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>3) Công thức thời gian rơi chỉ phụ thuộc h: </label>
+            <select name="q6-phy1-3">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q6-phy1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q6-phy1"></div>
+        </div>
+        <!-- Câu 7: (Mức 3, dạng (3)) -->
+        <div class="question" id="q7-phy1">
+          <h3>Câu 7</h3>
+          <p>Trong thực tế, để ném vật cứu hộ chính xác (không thể bỏ qua hoàn toàn lực cản), ta cần quan tâm:</p>
+          <form>
+            <input type="checkbox" name="q7-phy1" value="A"> A. Ảnh hưởng lực cản không khí.<br>
+            <input type="checkbox" name="q7-phy1" value="B"> B. Khối lượng vật ném.<br>
+            <input type="checkbox" name="q7-phy1" value="C"> C. Mật độ không khí thay đổi (nhiệt độ, ẩm).<br>
+            <input type="checkbox" name="q7-phy1" value="D"> D. Gia tốc trọng trường thay đổi rõ theo từng mét cao.<br>
+          </form>
+          <button class="mark-btn" data-question="q7-phy1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q7-phy1"></div>
+        </div>
+      </div>
+    </div>
+    <!-- ======================================
+         VẬT LÝ 2: DAO ĐỘNG CỦA CON LẮC ĐƠN (phy2)
+         ====================================== -->
+    <div class="page" id="phy2">
+      <div class="left-panel">
+        <h2>BÀI VẬT LÝ 2: DAO ĐỘNG CỦA CON LẮC ĐƠN</h2>
+        <h3>A. Thông tin khoa học</h3>
+        <p>
+          <strong>Mô tả lý thuyết:</strong><br>
+          Con lắc đơn có chiều dài <em>l</em>, dao động biên độ nhỏ coi gần đúng dao động điều hòa. Chu kỳ xấp xỉ: <em>T = 2π √(l/g)</em>. Chu kỳ phụ thuộc vào <em>l</em> và <em>g</em>, không phụ thuộc vào biên độ nếu biên độ nhỏ.
+        </p>
+        <p>
+          <strong>Tóm tắt thí nghiệm:</strong><br>
+          <table border="1" cellspacing="0" cellpadding="4">
+            <tr>
+              <th>Lần đo</th>
+              <th>l (m)</th>
+              <th>T thực (s)</th>
+              <th>Ghi chú</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>0,50</td>
+              <td>1,42</td>
+              <td>Góc lệch ~5° (nhỏ)</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>1,00</td>
+              <td>2,00</td>
+              <td>Góc lệch ~5° (nhỏ)</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>1,00</td>
+              <td>2,30</td>
+              <td>Góc lệch ~15° (lớn)</td>
+            </tr>
+          </table>
+        </p>
+        <p>
+          <strong>Ứng dụng thực tế:</strong><br>
+          – Đồng hồ quả lắc, đo thời gian.<br>
+          – Đo gia tốc trọng trường.
+        </p>
+      </div>
+      <div class="right-panel">
+        <div class="question-nav" id="qnav-phy2">
+          <button data-target="q1-phy2">Câu 1</button>
+          <button data-target="q2-phy2">Câu 2</button>
+          <button data-target="q3-phy2">Câu 3</button>
+          <button data-target="q4-phy2">Câu 4</button>
+          <button data-target="q5-phy2">Câu 5</button>
+          <button data-target="q6-phy2">Câu 6</button>
+          <button data-target="q7-phy2">Câu 7</button>
+        </div>
+        <!-- Q1 -->
+        <div class="question" id="q1-phy2">
+          <h3>Câu 1</h3>
+          <p>Công thức tính gần đúng chu kỳ con lắc đơn (góc nhỏ) là:</p>
+          <form>
+            <input type="radio" name="q1-phy2" value="A"> A. T = 2π √(m/k)<br>
+            <input type="radio" name="q1-phy2" value="B"> B. T = 2π √(l/g)<br>
+            <input type="radio" name="q1-phy2" value="C"> C. T = 2π √(1/g)<br>
+            <input type="radio" name="q1-phy2" value="D"> D. T = 2π/g<br>
+          </form>
+          <button class="mark-btn" data-question="q1-phy2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q1-phy2"></div>
+        </div>
+        <!-- Q2 -->
+        <div class="question" id="q2-phy2">
+          <h3>Câu 2</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S) về con lắc đơn (biên độ nhỏ):<br>
+             1) Chu kỳ chỉ phụ thuộc chiều dài con lắc.<br>
+             2) Chu kỳ tỉ lệ với √l.<br>
+             3) Chu kỳ tăng nếu biên độ góc dao động tăng.
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q2-phy2-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q2-phy2-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>3) </label>
+            <select name="q2-phy2-3">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q2-phy2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q2-phy2"></div>
+        </div>
+        <!-- Q3 -->
+        <div class="question" id="q3-phy2">
+          <h3>Câu 3</h3>
+          <p>Nhìn bảng dữ liệu (cùng l = 1,00 m nhưng T thực khác), có thể do:</p>
+          <form>
+            <input type="checkbox" name="q3-phy2" value="A"> A. Biên độ lớn làm tăng sai số.<br>
+            <input type="checkbox" name="q3-phy2" value="B"> B. Đo không chuẩn.<br>
+            <input type="checkbox" name="q3-phy2" value="C"> C. Biên độ lớn có ảnh hưởng đến chu kỳ.<br>
+            <input type="checkbox" name="q3-phy2" value="D"> D. Gia tốc trọng trường thay đổi đột ngột.<br>
+          </form>
+          <button class="mark-btn" data-question="q3-phy2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q3-phy2"></div>
+        </div>
+        <!-- Q4 -->
+        <div class="question" id="q4-phy2">
+          <h3>Câu 4</h3>
+          <p>Khi góc lệch nhỏ, ta coi chuyển động của con lắc đơn là ………………</p>
+          <input type="text" name="q4-phy2" placeholder="Nhập đáp án (2–4 từ)">
+          <button class="mark-btn" data-question="q4-phy2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q4-phy2"></div>
+        </div>
+        <!-- Q5 -->
+        <div class="question" id="q5-phy2">
+          <h3>Câu 5</h3>
+          <p>Con lắc đơn dài 0,8 m, lấy g = 9,8 m/s². Tính chu kỳ lý thuyết xấp xỉ:</p>
+          <form>
+            <input type="radio" name="q5-phy2" value="A"> A. 1,61 s<br>
+            <input type="radio" name="q5-phy2" value="B"> B. 1,80 s<br>
+            <input type="radio" name="q5-phy2" value="C"> C. 2,01 s<br>
+            <input type="radio" name="q5-phy2" value="D"> D. 2,60 s<br>
+          </form>
+          <button class="mark-btn" data-question="q5-phy2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q5-phy2"></div>
+        </div>
+        <!-- Q6 -->
+        <div class="question" id="q6-phy2">
+          <h3>Câu 6</h3>
+          <p>Xét ý kiến:<br>
+             – A: “Chu kỳ hoàn toàn không phụ thuộc biên độ.”<br>
+             – B: “Nếu biên độ lớn thì chu kỳ có thay đổi.”
+             <br>Đánh dấu Đúng (D) hoặc Sai (S):
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q6-phy2-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q6-phy2-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q6-phy2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q6-phy2"></div>
+        </div>
+        <!-- Q7 -->
+        <div class="question" id="q7-phy2">
+          <h3>Câu 7</h3>
+          <p>Ứng dụng con lắc đơn:</p>
+          <form>
+            <input type="checkbox" name="q7-phy2" value="A"> A. Đồng hồ quả lắc.<br>
+            <input type="checkbox" name="q7-phy2" value="B"> B. Điều khiển tivi.<br>
+            <input type="checkbox" name="q7-phy2" value="C"> C. Đo gia tốc trọng trường.<br>
+            <input type="checkbox" name="q7-phy2" value="D"> D. Điều hòa nhiệt độ phòng.<br>
+          </form>
+          <button class="mark-btn" data-question="q7-phy2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q7-phy2"></div>
+        </div>
+      </div>
+    </div>
+    <!-- ======================================
+         VẬT LÝ 3: DÒNG ĐIỆN XOAY CHIỀU VÀ ỨNG DỤNG (phy3)
+         ====================================== -->
+    <div class="page" id="phy3">
+      <div class="left-panel">
+        <h2>BÀI VẬT LÝ 3: DÒNG ĐIỆN XOAY CHIỀU VÀ ỨNG DỤNG</h2>
+        <h3>A. Thông tin khoa học</h3>
+        <p>
+          <strong>Biểu thức cơ bản:</strong><br>
+          i = I₀ sin(ωt), I<sub>hiệu dụng</sub> = I₀/√2, ω = 2πf.
+        </p>
+        <p>
+          <strong>Sơ đồ thí nghiệm và bảng số liệu (ví dụ):</strong><br>
+          <table border="1" cellspacing="0" cellpadding="4">
+            <tr>
+              <th>Thông số</th>
+              <th>Ký hiệu</th>
+              <th>Giá trị</th>
+            </tr>
+            <tr>
+              <td>Điện áp hiệu dụng</td>
+              <td>U</td>
+              <td>220 V</td>
+            </tr>
+            <tr>
+              <td>Tần số</td>
+              <td>f</td>
+              <td>50 Hz</td>
+            </tr>
+            <tr>
+              <td>Điện trở thuần</td>
+              <td>R</td>
+              <td>44 Ω</td>
+            </tr>
+            <tr>
+              <td>Hệ số công suất</td>
+              <td>cos φ</td>
+              <td>0,8</td>
+            </tr>
+          </table>
+        </p>
+        <p>
+          <strong>Ứng dụng thực tế:</strong><br>
+          – Mạng điện AC trong sinh hoạt và công nghiệp.<br>
+          – Thiết bị điện, máy biến áp, động cơ…
+        </p>
+      </div>
+      <div class="right-panel">
+        <div class="question-nav" id="qnav-phy3">
+          <button data-target="q1-phy3">Câu 1</button>
+          <button data-target="q2-phy3">Câu 2</button>
+          <button data-target="q3-phy3">Câu 3</button>
+          <button data-target="q4-phy3">Câu 4</button>
+          <button data-target="q5-phy3">Câu 5</button>
+          <button data-target="q6-phy3">Câu 6</button>
+          <button data-target="q7-phy3">Câu 7</button>
+        </div>
+        <!-- Q1 -->
+        <div class="question" id="q1-phy3">
+          <h3>Câu 1</h3>
+          <p>Biểu thức của dòng điện xoay chiều hình sin:</p>
+          <form>
+            <input type="radio" name="q1-phy3" value="A"> A. i = I₀ sin(ωt)<br>
+            <input type="radio" name="q1-phy3" value="B"> B. i = I₀ t²<br>
+            <input type="radio" name="q1-phy3" value="C"> C. i = I₀ e^(ωt)<br>
+            <input type="radio" name="q1-phy3" value="D"> D. i = I₀ (không đổi)<br>
+          </form>
+          <button class="mark-btn" data-question="q1-phy3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q1-phy3"></div>
+        </div>
+        <!-- Q2 -->
+        <div class="question" id="q2-phy3">
+          <h3>Câu 2</h3>
+          <p>Giá trị hiệu dụng của dòng xoay chiều là ……………… của biên độ dòng điện.</p>
+          <input type="text" name="q2-phy3" placeholder="Nhập đáp án (2–4 từ)">
+          <button class="mark-btn" data-question="q2-phy3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q2-phy3"></div>
+        </div>
+        <!-- Q3 -->
+        <div class="question" id="q3-phy3">
+          <h3>Câu 3</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S) cho các phát biểu về mạch xoay chiều RLC:<br>
+             1) U<sub>mạch</sub> bằng tổng đại số các U<sub>R</sub>, U<sub>L</sub>, U<sub>C</sub>.<br>
+             2) Dòng điện trễ pha hơn điện áp nếu mạch có tính dung kháng.<br>
+             3) cos φ = R/Z.
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q3-phy3-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q3-phy3-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>3) </label>
+            <select name="q3-phy3-3">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q3-phy3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q3-phy3"></div>
+        </div>
+        <!-- Q4 -->
+        <div class="question" id="q4-phy3">
+          <h3>Câu 4</h3>
+          <p>Từ bảng số liệu: U = 220 V, f = 50 Hz, R = 44 Ω, cos φ = 0,8. Chọn phát biểu đúng:</p>
+          <form>
+            <input type="checkbox" name="q4-phy3" value="A"> A. I<sub>hiệu dụng</sub> ≈ 5 A<br>
+            <input type="checkbox" name="q4-phy3" value="B"> B. φ ≈ 36°<br>
+            <input type="checkbox" name="q4-phy3" value="C"> C. ω = 2π·50<br>
+            <input type="checkbox" name="q4-phy3" value="D"> D. P = U · I · cos φ<br>
+          </form>
+          <button class="mark-btn" data-question="q4-phy3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q4-phy3"></div>
+        </div>
+        <!-- Q5 -->
+        <div class="question" id="q5-phy3">
+          <h3>Câu 5</h3>
+          <p>Nếu mạch trên tiêu thụ công suất trung bình 880 W, cos φ = 0,8, U = 220 V, cường độ hiệu dụng qua mạch xấp xỉ:</p>
+          <form>
+            <input type="radio" name="q5-phy3" value="A"> A. 4 A<br>
+            <input type="radio" name="q5-phy3" value="B"> B. 5 A<br>
+            <input type="radio" name="q5-phy3" value="C"> C. 6 A<br>
+            <input type="radio" name="q5-phy3" value="D"> D. 10 A<br>
+          </form>
+          <button class="mark-btn" data-question="q5-phy3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q5-phy3"></div>
+        </div>
+        <!-- Q6 -->
+        <div class="question" id="q6-phy3">
+          <h3>Câu 6</h3>
+          <p>Xét quan điểm:<br>
+             – “Tăng điện áp sẽ giảm hao phí trên đường dây.”<br>
+             – “Điện áp cao rất nguy hiểm, không nên tăng cao.”<br>
+             Đánh dấu Đúng (D) hoặc Sai (S):
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q6-phy3-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q6-phy3-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q6-phy3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q6-phy3"></div>
+        </div>
+        <!-- Q7 -->
+        <div class="question" id="q7-phy3">
+          <h3>Câu 7</h3>
+          <p>(Mức 3, dạng (4)) Khi truyền tải điện ở điện áp cao, ……………… là cách giải quyết hài hòa hiệu suất và an toàn.</p>
+          <input type="text" name="q7-phy3" placeholder="Nhập đáp án (2–4 từ)">
+          <button class="mark-btn" data-question="q7-phy3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q7-phy3"></div>
+        </div>
+      </div>
+    </div>
+    <!-- ======================================
+         HÓA HỌC 1: PHẢN ỨNG OXI HÓA – KHỬ TRONG PIN ĐIỆN HÓA (chem1)
+         ====================================== -->
+    <div class="page" id="chem1">
+      <div class="left-panel">
+        <h2>BÀI HÓA HỌC 1: PHẢN ỨNG OXI HÓA – KHỬ TRONG PIN ĐIỆN HÓA</h2>
+        <h3>A. Thông tin khoa học</h3>
+        <p>
+          <strong>Khái niệm:</strong><br>
+          Phản ứng oxi hóa – khử là quá trình thay đổi số oxi hóa của các nguyên tố. Pin điện hóa Zn–Cu hoạt động dựa trên phản ứng oxi hóa – khử.
+        </p>
+        <p>
+          <strong>Ví dụ pin Zn–Cu:</strong><br>
+          – Cực âm (Zn) bị oxi hóa: Zn → Zn²⁺ + 2e⁻.<br>
+          – Cực dương (Cu) bị khử: Cu²⁺ + 2e⁻ → Cu.
+        </p>
+        <p>
+          <strong>Ứng dụng thực tế:</strong><br>
+          – Sản xuất pin, ắc quy.<br>
+          – Chuyển hóa năng lượng hóa học thành điện năng.
+        </p>
+      </div>
+      <div class="right-panel">
+        <div class="question-nav" id="qnav-chem1">
+          <button data-target="q1-chem1">Câu 1</button>
+          <button data-target="q2-chem1">Câu 2</button>
+          <button data-target="q3-chem1">Câu 3</button>
+          <button data-target="q4-chem1">Câu 4</button>
+          <button data-target="q5-chem1">Câu 5</button>
+          <button data-target="q6-chem1">Câu 6</button>
+          <button data-target="q7-chem1">Câu 7</button>
+        </div>
+        <!-- Q1 -->
+        <div class="question" id="q1-chem1">
+          <h3>Câu 1</h3>
+          <p>Trong pin Zn–Cu, kim loại đóng vai trò cực âm là:</p>
+          <form>
+            <input type="radio" name="q1-chem1" value="A"> A. Cu<br>
+            <input type="radio" name="q1-chem1" value="B"> B. Zn<br>
+            <input type="radio" name="q1-chem1" value="C"> C. Fe<br>
+            <input type="radio" name="q1-chem1" value="D"> D. Ag<br>
+          </form>
+          <button class="mark-btn" data-question="q1-chem1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q1-chem1"></div>
+        </div>
+        <!-- Q2 -->
+        <div class="question" id="q2-chem1">
+          <h3>Câu 2</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S) về phản ứng trong pin Zn–Cu:<br>
+             1) Zn bị oxi hóa sinh Zn²⁺.<br>
+             2) Cu nhận electron từ dung dịch.<br>
+             3) Cu bị oxi hóa.
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q2-chem1-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q2-chem1-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>3) </label>
+            <select name="q2-chem1-3">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q2-chem1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q2-chem1"></div>
+        </div>
+        <!-- Q3 -->
+        <div class="question" id="q3-chem1">
+          <h3>Câu 3</h3>
+          <p>Vai trò của phản ứng oxi hóa – khử trong pin Zn–Cu là:</p>
+          <form>
+            <input type="checkbox" name="q3-chem1" value="A"> A. Tạo ra dòng electron trong mạch ngoài.<br>
+            <input type="checkbox" name="q3-chem1" value="B"> B. Tạo kết tủa làm giảm nồng độ ion.<br>
+            <input type="checkbox" name="q3-chem1" value="C"> C. Chuyển hóa năng lượng hóa học thành điện.<br>
+            <input type="checkbox" name="q3-chem1" value="D"> D. Giúp pin bền mãi mãi.<br>
+          </form>
+          <button class="mark-btn" data-question="q3-chem1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q3-chem1"></div>
+        </div>
+        <!-- Q4 -->
+        <div class="question" id="q4-chem1">
+          <h3>Câu 4</h3>
+          <p>Cực âm luôn xảy ra quá trình ………………</p>
+          <input type="text" name="q4-chem1" placeholder="Nhập đáp án (2–4 từ)">
+          <button class="mark-btn" data-question="q4-chem1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q4-chem1"></div>
+        </div>
+        <!-- Q5 -->
+        <div class="question" id="q5-chem1">
+          <h3>Câu 5</h3>
+          <p>Nếu mỗi pin Zn–Cu có suất điện động 1,1 V, nối tiếp 2 pin, tổng xấp xỉ:</p>
+          <form>
+            <input type="radio" name="q5-chem1" value="A"> A. 1,1 V<br>
+            <input type="radio" name="q5-chem1" value="B"> B. 2,2 V<br>
+            <input type="radio" name="q5-chem1" value="C"> C. 0,0 V<br>
+            <input type="radio" name="q5-chem1" value="D"> D. 3,3 V<br>
+          </form>
+          <button class="mark-btn" data-question="q5-chem1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q5-chem1"></div>
+        </div>
+        <!-- Q6 -->
+        <div class="question" id="q6-chem1">
+          <h3>Câu 6</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S):<br>
+             1) “Pin có thể cạn kiệt khi Zn ăn mòn dần.”<br>
+             2) “Pin là vĩnh cửu, chỉ cần thay dung dịch điện giải.”
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q6-chem1-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q6-chem1-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q6-chem1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q6-chem1"></div>
+        </div>
+        <!-- Q7 -->
+        <div class="question" id="q7-chem1">
+          <h3>Câu 7</h3>
+          <p>Để kéo dài tuổi thọ pin Zn–Cu:</p>
+          <form>
+            <input type="checkbox" name="q7-chem1" value="A"> A. Giảm tốc độ ăn mòn điện cực Zn.<br>
+            <input type="checkbox" name="q7-chem1" value="B"> B. Dùng vật liệu khác bền hơn thay Zn.<br>
+            <input type="checkbox" name="q7-chem1" value="C"> C. Sạc pin bằng nguồn xoay chiều.<br>
+            <input type="checkbox" name="q7-chem1" value="D"> D. Giảm tiêu thụ dòng bằng cách hạn chế tải.<br>
+          </form>
+          <button class="mark-btn" data-question="q7-chem1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q7-chem1"></div>
+        </div>
+      </div>
+    </div>
+    <!-- ======================================
+         HÓA HỌC 2: TÍNH CHẤT HÓA HỌC CỦA KIM LOẠI KIỀM (chem2)
+         ====================================== -->
+    <div class="page" id="chem2">
+      <div class="left-panel">
+        <h2>BÀI HÓA HỌC 2: TÍNH CHẤT HÓA HỌC CỦA KIM LOẠI KIỀM</h2>
+        <h3>A. Thông tin khoa học</h3>
+        <p>
+          <strong>Kim loại kiềm:</strong><br>
+          Gồm Li, Na, K, Rb, Cs, Fr. Có 1 electron lớp ngoài cùng, dễ bị mất → tính khử mạnh.
+        </p>
+        <p>
+          <strong>Phản ứng với nước:</strong><br>
+          Tạo dung dịch kiềm và khí H₂: <br>
+          2Na + 2H₂O → 2NaOH + H₂.
+        </p>
+        <p>
+          <strong>Ứng dụng thực tế:</strong><br>
+          – Sử dụng trong tổng hợp hữu cơ, chế tạo pin kiềm…<br>
+          – Thường bảo quản trong dầu hỏa để tránh phản ứng với môi trường.
+        </p>
+      </div>
+      <div class="right-panel">
+        <div class="question-nav" id="qnav-chem2">
+          <button data-target="q1-chem2">Câu 1</button>
+          <button data-target="q2-chem2">Câu 2</button>
+          <button data-target="q3-chem2">Câu 3</button>
+          <button data-target="q4-chem2">Câu 4</button>
+          <button data-target="q5-chem2">Câu 5</button>
+          <button data-target="q6-chem2">Câu 6</button>
+          <button data-target="q7-chem2">Câu 7</button>
+        </div>
+        <!-- Q1 -->
+        <div class="question" id="q1-chem2">
+          <h3>Câu 1</h3>
+          <p>Phát biểu đúng về kim loại kiềm:</p>
+          <form>
+            <input type="radio" name="q1-chem2" value="A"> A. Có 2 electron lớp ngoài.<br>
+            <input type="radio" name="q1-chem2" value="B"> B. Bền hóa học, không phản ứng với nước.<br>
+            <input type="radio" name="q1-chem2" value="C"> C. Dễ bị oxi hóa, tính khử rất mạnh.<br>
+            <input type="radio" name="q1-chem2" value="D"> D. Luôn có ion 2+ trong hợp chất.<br>
+          </form>
+          <button class="mark-btn" data-question="q1-chem2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q1-chem2"></div>
+        </div>
+        <!-- Q2 -->
+        <div class="question" id="q2-chem2">
+          <h3>Câu 2</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S):<br>
+             1) Kim loại kiềm được bảo quản trong dầu hỏa.<br>
+             2) Na phản ứng với nước không sinh nhiệt.<br>
+             3) Na có thể dùng chế tạo pin kiềm.
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q2-chem2-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q2-chem2-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>3) </label>
+            <select name="q2-chem2-3">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q2-chem2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q2-chem2"></div>
+        </div>
+        <!-- Q3 -->
+        <div class="question" id="q3-chem2">
+          <h3>Câu 3</h3>
+          <p>Kim loại kiềm có ……………… lớp ngoài cùng nên dễ mất electron.</p>
+          <input type="text" name="q3-chem2" placeholder="Nhập đáp án (2–4 từ)">
+          <button class="mark-btn" data-question="q3-chem2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q3-chem2"></div>
+        </div>
+        <!-- Q4 -->
+        <div class="question" id="q4-chem2">
+          <h3>Câu 4</h3>
+          <p>Phương trình phản ứng Na với nước:</p>
+          <form>
+            <input type="radio" name="q4-chem2" value="A"> A. 2Na + 2H₂ → 2NaH<br>
+            <input type="radio" name="q4-chem2" value="B"> B. 2Na + H₂ → 2NaH<br>
+            <input type="radio" name="q4-chem2" value="C"> C. 2Na + 2H₂O → 2NaOH + H₂<br>
+            <input type="radio" name="q4-chem2" value="D"> D. Na + H₂O → NaH + OH⁻<br>
+          </form>
+          <button class="mark-btn" data-question="q4-chem2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q4-chem2"></div>
+        </div>
+        <!-- Q5 -->
+        <div class="question" id="q5-chem2">
+          <h3>Câu 5</h3>
+          <p>Khi cho mẫu Na vào nước (tỏa nhiệt mạnh, thoát H₂), để giảm tốc độ phản ứng, nên:</p>
+          <form>
+            <input type="radio" name="q5-chem2" value="A"> A. Tăng nhiệt độ nước<br>
+            <input type="radio" name="q5-chem2" value="B"> B. Thêm axit mạnh<br>
+            <input type="radio" name="q5-chem2" value="C"> C. Dùng nước đá (nhiệt độ thấp) thay nước thường<br>
+            <input type="radio" name="q5-chem2" value="D"> D. Khuấy mạnh dung dịch<br>
+          </form>
+          <button class="mark-btn" data-question="q5-chem2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q5-chem2"></div>
+        </div>
+        <!-- Q6 -->
+        <div class="question" id="q6-chem2">
+          <h3>Câu 6</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S):<br>
+             1) Không khí khô vẫn có nguy cơ hút ẩm.<br>
+             2) Dầu hỏa là biện pháp an toàn phổ biến.
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q6-chem2-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q6-chem2-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q6-chem2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q6-chem2"></div>
+        </div>
+        <!-- Q7 -->
+        <div class="question" id="q7-chem2">
+          <h3>Câu 7</h3>
+          <p>Trong nhà máy, để hạn chế cháy nổ khi dùng Na:</p>
+          <form>
+            <input type="checkbox" name="q7-chem2" value="A"> A. Bảo quản kín trong dầu hỏa.<br>
+            <input type="checkbox" name="q7-chem2" value="B"> B. Phun nước trực tiếp vào chỗ Na rơi vãi.<br>
+            <input type="checkbox" name="q7-chem2" value="C"> C. Dùng cát khô, dụng cụ chống cháy.<br>
+            <input type="checkbox" name="q7-chem2" value="D"> D. Giảm lượng Na tiếp xúc không khí.<br>
+          </form>
+          <button class="mark-btn" data-question="q7-chem2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q7-chem2"></div>
+        </div>
+      </div>
+    </div>
+    <!-- ======================================
+         SINH HỌC 1: CHUYỂN HÓA NĂNG LƯỢNG Ở TẾ BÀO (bio1)
+         ====================================== -->
+    <div class="page" id="bio1">
+      <div class="left-panel">
+        <h2>BÀI SINH HỌC 1: CHUYỂN HÓA NĂNG LƯỢNG Ở TẾ BÀO</h2>
+        <h3>A. Thông tin khoa học</h3>
+        <p>
+          <strong>Quá trình hô hấp tế bào:</strong><br>
+          Diễn ra chủ yếu ở ti thể (sinh vật nhân thực).<br>
+          Phản ứng tổng quát:<br>
+          C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + Năng lượng (ATP).
+        </p>
+        <p>
+          <strong>Bảng tóm tắt năng lượng:</strong><br>
+          <table border="1" cellspacing="0" cellpadding="4">
+            <tr>
+              <th>Giai đoạn</th>
+              <th>Vị trí</th>
+              <th>Số ATP</th>
+            </tr>
+            <tr>
+              <td>Đường phân</td>
+              <td>Tế bào chất</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Chu trình Krebs</td>
+              <td>Chất nền ti thể</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Chuỗi chuyền electron</td>
+              <td>Màng trong ti thể</td>
+              <td>32–34</td>
+            </tr>
+            <tr>
+              <td><strong>Tổng</strong></td>
+              <td></td>
+              <td>36–38</td>
+            </tr>
+          </table>
+        </p>
+        <p>
+          <strong>Ứng dụng:</strong><br>
+          – Hiểu cơ chế cung cấp năng lượng cho cơ thể.<br>
+          – Nghiên cứu y sinh, tăng hiệu quả hô hấp…
+        </p>
+      </div>
+      <div class="right-panel">
+        <div class="question-nav" id="qnav-bio1">
+          <button data-target="q1-bio1">Câu 1</button>
+          <button data-target="q2-bio1">Câu 2</button>
+          <button data-target="q3-bio1">Câu 3</button>
+          <button data-target="q4-bio1">Câu 4</button>
+          <button data-target="q5-bio1">Câu 5</button>
+          <button data-target="q6-bio1">Câu 6</button>
+          <button data-target="q7-bio1">Câu 7</button>
+        </div>
+        <!-- Q1 -->
+        <div class="question" id="q1-bio1">
+          <h3>Câu 1</h3>
+          <p>Quá trình hô hấp tế bào chủ yếu xảy ra ở bào quan:</p>
+          <form>
+            <input type="radio" name="q1-bio1" value="A"> A. Lục lạp<br>
+            <input type="radio" name="q1-bio1" value="B"> B. Nhân<br>
+            <input type="radio" name="q1-bio1" value="C"> C. Ti thể<br>
+            <input type="radio" name="q1-bio1" value="D"> D. Màng sinh chất<br>
+          </form>
+          <button class="mark-btn" data-question="q1-bio1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q1-bio1"></div>
+        </div>
+        <!-- Q2 -->
+        <div class="question" id="q2-bio1">
+          <h3>Câu 2</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S):<br>
+             1) Đường phân diễn ra trong nhân tế bào.<br>
+             2) Chu trình Krebs diễn ra ở chất nền ti thể.<br>
+             3) Mỗi Glucose giải phóng ~36–38 ATP.
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q2-bio1-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q2-bio1-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>3) </label>
+            <select name="q2-bio1-3">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q2-bio1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q2-bio1"></div>
+        </div>
+        <!-- Q3 -->
+        <div class="question" id="q3-bio1">
+          <h3>Câu 3</h3>
+          <p>Giai đoạn nào tạo nhiều ATP nhất?</p>
+          <form>
+            <input type="radio" name="q3-bio1" value="A"> A. Đường phân<br>
+            <input type="radio" name="q3-bio1" value="B"> B. Chu trình Krebs<br>
+            <input type="radio" name="q3-bio1" value="C"> C. Chuỗi chuyền electron<br>
+            <input type="radio" name="q3-bio1" value="D"> D. Tổng hợp acid béo<br>
+          </form>
+          <button class="mark-btn" data-question="q3-bio1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q3-bio1"></div>
+        </div>
+        <!-- Q4 -->
+        <div class="question" id="q4-bio1">
+          <h3>Câu 4</h3>
+          <p>Chuỗi chuyền electron diễn ra ở ……………… của ti thể.</p>
+          <input type="text" name="q4-bio1" placeholder="Nhập đáp án (2–4 từ)">
+          <button class="mark-btn" data-question="q4-bio1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q4-bio1"></div>
+        </div>
+        <!-- Q5 -->
+        <div class="question" id="q5-bio1">
+          <h3>Câu 5</h3>
+          <p>Nếu cơ thể thiếu oxy nặng, hiệu suất tạo ATP từ Glucose sẽ:</p>
+          <form>
+            <input type="radio" name="q5-bio1" value="A"> A. Tăng mạnh<br>
+            <input type="radio" name="q5-bio1" value="B"> B. Giảm đi đáng kể<br>
+            <input type="radio" name="q5-bio1" value="C"> C. Không đổi<br>
+            <input type="radio" name="q5-bio1" value="D"> D. Ngừng hoàn toàn<br>
+          </form>
+          <button class="mark-btn" data-question="q5-bio1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q5-bio1"></div>
+        </div>
+        <!-- Q6 -->
+        <div class="question" id="q6-bio1">
+          <h3>Câu 6</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S):<br>
+             1) “Hô hấp tế bào chỉ xảy ra khi có oxy.”<br>
+             2) “Đường phân vẫn xảy ra khi thiếu oxy, nhưng chuỗi chuyền electron cần oxy.”
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q6-bio1-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q6-bio1-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q6-bio1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q6-bio1"></div>
+        </div>
+        <!-- Q7 -->
+        <div class="question" id="q7-bio1">
+          <h3>Câu 7</h3>
+          <p>Trong thể thao, để tăng sức bền:</p>
+          <form>
+            <input type="checkbox" name="q7-bio1" value="A"> A. Tăng khả năng cung cấp oxy cho cơ.<br>
+            <input type="checkbox" name="q7-bio1" value="B"> B. Ưu tiên tăng đường phân yếm khí.<br>
+            <input type="checkbox" name="q7-bio1" value="C"> C. Bổ sung ATP trực tiếp từ ngoài.<br>
+            <input type="checkbox" name="q7-bio1" value="D"> D. Tăng nồng độ myoglobin và số lượng ti thể.<br>
+          </form>
+          <button class="mark-btn" data-question="q7-bio1">Đánh dấu</button>
+          <div class="feedback" id="feedback-q7-bio1"></div>
+        </div>
+      </div>
+    </div>
+    <!-- ======================================
+         SINH HỌC 2: DI TRUYỀN Ở NGƯỜI (bio2)
+         ====================================== -->
+    <div class="page" id="bio2">
+      <div class="left-panel">
+        <h2>BÀI SINH HỌC 2: DI TRUYỀN Ở NGƯỜI</h2>
+        <h3>A. Thông tin khoa học</h3>
+        <p>
+          <strong>Các dạng di truyền:</strong><br>
+          – Liên kết NST thường<br>
+          – Liên kết NST giới tính (X hoặc Y)
+        </p>
+        <p>
+          <strong>Ví dụ bệnh di truyền đơn gen:</strong><br>
+          – Bệnh mù màu (gen lặn trên X)<br>
+          – Bệnh máu khó đông (gen lặn trên X)
+        </p>
+        <p>
+          <strong>Quan điểm xung đột:</strong><br>
+          – A: “Bệnh X-lặn chỉ biểu hiện ở nam.”<br>
+          – B: “Nữ vẫn có thể biểu hiện nếu mang 2 alen lặn.”
+        </p>
+        <p>
+          <strong>Ứng dụng thực tế:</strong><br>
+          – Tư vấn di truyền, sàng lọc trước sinh…
+        </p>
+      </div>
+      <div class="right-panel">
+        <div class="question-nav" id="qnav-bio2">
+          <button data-target="q1-bio2">Câu 1</button>
+          <button data-target="q2-bio2">Câu 2</button>
+          <button data-target="q3-bio2">Câu 3</button>
+          <button data-target="q4-bio2">Câu 4</button>
+          <button data-target="q5-bio2">Câu 5</button>
+          <button data-target="q6-bio2">Câu 6</button>
+          <button data-target="q7-bio2">Câu 7</button>
+        </div>
+        <!-- Q1 -->
+        <div class="question" id="q1-bio2">
+          <h3>Câu 1</h3>
+          <p>Bệnh máu khó đông (gen lặn trên X). Nam mang alen lặn sẽ:</p>
+          <form>
+            <input type="radio" name="q1-bio2" value="A"> A. Không bệnh<br>
+            <input type="radio" name="q1-bio2" value="B"> B. Biểu hiện bệnh<br>
+            <input type="radio" name="q1-bio2" value="C"> C. Cần 2 NST X lặn mới bệnh<br>
+            <input type="radio" name="q1-bio2" value="D"> D. Không thể truyền gen bệnh cho con gái<br>
+          </form>
+          <button class="mark-btn" data-question="q1-bio2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q1-bio2"></div>
+        </div>
+        <!-- Q2 -->
+        <div class="question" id="q2-bio2">
+          <h3>Câu 2</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S):<br>
+             1) Bệnh mù màu do gen lặn trên X.<br>
+             2) Nữ giới có 1 X và 1 Y.<br>
+             3) Nam giới có 1 X và 1 Y.
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q2-bio2-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q2-bio2-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>3) </label>
+            <select name="q2-bio2-3">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q2-bio2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q2-bio2"></div>
+        </div>
+        <!-- Q3 -->
+        <div class="question" id="q3-bio2">
+          <h3>Câu 3</h3>
+          <p>Theo quan điểm mâu thuẫn:</p>
+          <form>
+            <input type="radio" name="q3-bio2" value="A"> A. Nam chỉ cần 1 alen lặn trên X là bị bệnh<br>
+            <input type="radio" name="q3-bio2" value="B"> B. Nữ cần 2 alen lặn trên cả 2 X mới bị bệnh<br>
+            <input type="radio" name="q3-bio2" value="C"> C. Nữ không bao giờ bị bệnh<br>
+            <input type="radio" name="q3-bio2" value="D"> D. Quan điểm B hợp lý hơn A<br>
+          </form>
+          <button class="mark-btn" data-question="q3-bio2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q3-bio2"></div>
+        </div>
+        <!-- Q4 -->
+        <div class="question" id="q4-bio2">
+          <h3>Câu 4</h3>
+          <p>Bệnh di truyền liên kết X lặn thường biểu hiện ở ……………… hơn.</p>
+          <input type="text" name="q4-bio2" placeholder="Nhập đáp án (2–4 từ)">
+          <button class="mark-btn" data-question="q4-bio2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q4-bio2"></div>
+        </div>
+        <!-- Q5 -->
+        <div class="question" id="q5-bio2">
+          <h3>Câu 5</h3>
+          <p>Người đàn ông bình thường (XY) lấy vợ bình thường (XX), bố vợ bị mù màu. Giả thiết mẹ vợ <strong>không</strong> mang alen lặn. Khả năng sinh con trai mù màu của cặp này là:</p>
+          <form>
+            <input type="radio" name="q5-bio2" value="A"> A. 0%<br>
+            <input type="radio" name="q5-bio2" value="B"> B. 25%<br>
+            <input type="radio" name="q5-bio2" value="C"> C. 50%<br>
+            <input type="radio" name="q5-bio2" value="D"> D. 100%<br>
+          </form>
+          <button class="mark-btn" data-question="q5-bio2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q5-bio2"></div>
+        </div>
+        <!-- Q6 -->
+        <div class="question" id="q6-bio2">
+          <h3>Câu 6</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S):<br>
+             1) “Nếu mẹ mang gen lặn X, con trai có nguy cơ cao bị bệnh.”<br>
+             2) “Mọi con gái của bố bệnh đều chắc chắn bệnh.”
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q6-bio2-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q6-bio2-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q6-bio2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q6-bio2"></div>
+        </div>
+        <!-- Q7 -->
+        <div class="question" id="q7-bio2">
+          <h3>Câu 7</h3>
+          <p>Để hạn chế nguy cơ bệnh di truyền liên kết X:</p>
+          <form>
+            <input type="checkbox" name="q7-bio2" value="A"> A. Tư vấn di truyền trước khi kết hôn<br>
+            <input type="checkbox" name="q7-bio2" value="B"> B. Chỉ khám sức khỏe nam giới<br>
+            <input type="checkbox" name="q7-bio2" value="C"> C. Sàng lọc phôi<br>
+            <input type="checkbox" name="q7-bio2" value="D"> D. Xét nghiệm, theo dõi người mẹ mang gen<br>
+          </form>
+          <button class="mark-btn" data-question="q7-bio2">Đánh dấu</button>
+          <div class="feedback" id="feedback-q7-bio2"></div>
+        </div>
+      </div>
+    </div>
+    <!-- ======================================
+         SINH HỌC 3: SINH THÁI HỌC QUẦN THỂ (bio3)
+         ====================================== -->
+    <div class="page" id="bio3">
+      <div class="left-panel">
+        <h2>BÀI SINH HỌC 3: SINH THÁI HỌC QUẦN THỂ</h2>
+        <h3>A. Thông tin khoa học</h3>
+        <p>
+          <strong>Khái niệm quần thể:</strong><br>
+          Tập hợp cá thể cùng loài, sống cùng không gian, có khả năng sinh sản hình thành thế hệ mới.
+        </p>
+        <p>
+          <strong>Đồ thị tăng trưởng:</strong><br>
+          – Mô hình J (tăng theo hàm mũ, giả sử không giới hạn).<br>
+          – Mô hình S (logistic) bị giới hạn bởi sức chứa môi trường.
+        </p>
+        <p>
+          <strong>Quan điểm xung đột:</strong><br>
+          – A: “Quần thể luôn tăng trưởng không giới hạn.”<br>
+          – B: “Quần thể chịu sức chứa môi trường (carrying capacity).”
+        </p>
+        <p>
+          <strong>Ứng dụng thực tế:</strong><br>
+          – Quản lý, bảo tồn tài nguyên sinh vật, dự báo bùng nổ sâu hại…
+        </p>
+      </div>
+      <div class="right-panel">
+        <div class="question-nav" id="qnav-bio3">
+          <button data-target="q1-bio3">Câu 1</button>
+          <button data-target="q2-bio3">Câu 2</button>
+          <button data-target="q3-bio3">Câu 3</button>
+          <button data-target="q4-bio3">Câu 4</button>
+          <button data-target="q5-bio3">Câu 5</button>
+          <button data-target="q6-bio3">Câu 6</button>
+          <button data-target="q7-bio3">Câu 7</button>
+        </div>
+        <!-- Q1 -->
+        <div class="question" id="q1-bio3">
+          <h3>Câu 1</h3>
+          <p>Quần thể là:</p>
+          <form>
+            <input type="radio" name="q1-bio3" value="A"> A. Tập hợp các loài khác nhau sống chung<br>
+            <input type="radio" name="q1-bio3" value="B"> B. Tập hợp cá thể cùng loài, có khả năng sinh sản với nhau<br>
+            <input type="radio" name="q1-bio3" value="C"> C. Tập hợp động vật ăn thịt trong rừng<br>
+            <input type="radio" name="q1-bio3" value="D"> D. Tập hợp cây xanh trong môi trường<br>
+          </form>
+          <button class="mark-btn" data-question="q1-bio3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q1-bio3"></div>
+        </div>
+        <!-- Q2 -->
+        <div class="question" id="q2-bio3">
+          <h3>Câu 2</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S):<br>
+             1) Tăng trưởng hình J là mô hình không giới hạn.<br>
+             2) Tăng trưởng hình S bị giới hạn bởi sức chứa môi trường.<br>
+             3) Trong thực tế, quần thể luôn theo mô hình J.
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q2-bio3-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q2-bio3-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>3) </label>
+            <select name="q2-bio3-3">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q2-bio3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q2-bio3"></div>
+        </div>
+        <!-- Q3 -->
+        <div class="question" id="q3-bio3">
+          <h3>Câu 3</h3>
+          <p>Yếu tố nào ảnh hưởng đến sức chứa môi trường?</p>
+          <form>
+            <input type="checkbox" name="q3-bio3" value="A"> A. Thức ăn, nước<br>
+            <input type="checkbox" name="q3-bio3" value="B"> B. Khí hậu, dịch bệnh<br>
+            <input type="checkbox" name="q3-bio3" value="C"> C. Cạnh tranh cùng loài, khác loài<br>
+            <input type="checkbox" name="q3-bio3" value="D"> D. Chỉ phụ thuộc năng lượng mặt trời<br>
+          </form>
+          <button class="mark-btn" data-question="q3-bio3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q3-bio3"></div>
+        </div>
+        <!-- Q4 -->
+        <div class="question" id="q4-bio3">
+          <h3>Câu 4</h3>
+          <p>Khi quần thể chạm đến ………………, tốc độ tăng trưởng giảm.</p>
+          <input type="text" name="q4-bio3" placeholder="Nhập đáp án (2–4 từ)">
+          <button class="mark-btn" data-question="q4-bio3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q4-bio3"></div>
+        </div>
+        <!-- Q5 -->
+        <div class="question" id="q5-bio3">
+          <h3>Câu 5</h3>
+          <p>Nếu quần thể tăng mạnh rồi suy giảm đột ngột, có thể do:</p>
+          <form>
+            <input type="radio" name="q5-bio3" value="A"> A. Môi trường không giới hạn<br>
+            <input type="radio" name="q5-bio3" value="B"> B. Vượt sức chứa môi trường, cạn nguồn sống<br>
+            <input type="radio" name="q5-bio3" value="C"> C. Quần thể tăng ổn định<br>
+            <input type="radio" name="q5-bio3" value="D"> D. Quần thể không bị ảnh hưởng điều kiện ngoài<br>
+          </form>
+          <button class="mark-btn" data-question="q5-bio3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q5-bio3"></div>
+        </div>
+        <!-- Q6 -->
+        <div class="question" id="q6-bio3">
+          <h3>Câu 6</h3>
+          <p>Đánh dấu Đúng (D) hoặc Sai (S):<br>
+             1) “Quần thể luôn tăng không giới hạn.”<br>
+             2) “Sức chứa môi trường giới hạn mức tăng.”
+          </p>
+          <form>
+            <label>1) </label>
+            <select name="q6-bio3-1">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select><br>
+            <label>2) </label>
+            <select name="q6-bio3-2">
+              <option value="">--Chọn--</option>
+              <option value="Đ">Đúng</option>
+              <option value="S">Sai</option>
+            </select>
+          </form>
+          <button class="mark-btn" data-question="q6-bio3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q6-bio3"></div>
+        </div>
+        <!-- Q7 -->
+        <div class="question" id="q7-bio3">
+          <h3>Câu 7</h3>
+          <p>Trong quản lý tài nguyên, hiểu rõ tăng trưởng quần thể giúp:</p>
+          <form>
+            <input type="checkbox" name="q7-bio3" value="A"> A. Dự báo, ngăn bùng nổ sinh vật hại<br>
+            <input type="checkbox" name="q7-bio3" value="B"> B. Khai thác tùy ý<br>
+            <input type="checkbox" name="q7-bio3" value="C"> C. Xác định mức khai thác bền vững<br>
+            <input type="checkbox" name="q7-bio3" value="D"> D. Không cần quan tâm, quần thể tự điều chỉnh<br>
+          </form>
+          <button class="mark-btn" data-question="q7-bio3">Đánh dấu</button>
+          <div class="feedback" id="feedback-q7-bio3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ======================================
+       PHẦN ĐÁP ÁN TÓM TẮT
+  <div id="answer-key">
+    <h2>ĐÁP ÁN TÓM TẮT CHO CÁC CÂU HỎI</h2>
+    <h3>BÀI VẬT LÝ 1</h3>
+    <p>
+      1. A<br>
+      2. (1) Đ; (2) S; (3) Đ; (4) Đ<br>
+      3. B, D<br>
+      4. “một đường parabol” (hoặc “một quỹ đạo parabol”)<br>
+      5. C (khoảng 2,7 m)<br>
+      6. (1) Đ; (2) S; (3) Đ<br>
+      7. A, C
+    </p>
+    <h3>BÀI VẬT LÝ 2</h3>
+    <p>
+      1. B<br>
+      2. (1) S; (2) Đ; (3) S<br>
+      3. A, B, C<br>
+      4. “là dao động điều hòa”<br>
+      5. B (khoảng 1,80 s)<br>
+      6. (1) S; (2) Đ<br>
+      7. A, C
+    </p>
+    <h3>BÀI VẬT LÝ 3</h3>
+    <p>
+      1. A<br>
+      2. “bằng 1/√2” (hoặc “0,707 của biên độ”)<br>
+      3. (1) S; (2) S; (3) Đ<br>
+      4. B, C, D<br>
+      5. B (5 A)<br>
+      6. (1) Đ; (2) S<br>
+      7. “sử dụng máy biến áp” (hoặc “trạm biến áp phù hợp”)
+    </p>
+    <h3>BÀI HÓA HỌC 1</h3>
+    <p>
+      1. B<br>
+      2. (1) Đ; (2) Đ; (3) S<br>
+      3. A, C<br>
+      4. “oxi hóa”<br>
+      5. B (2,2 V)<br>
+      6. (1) Đ; (2) S<br>
+      7. A, B, D
+    </p>
+    <h3>BÀI HÓA HỌC 2</h3>
+    <p>
+      1. C<br>
+      2. (1) Đ; (2) S; (3) Đ<br>
+      3. “1 electron hóa trị” (hoặc “1 electron ngoài cùng”)<br>
+      4. C<br>
+      5. C (dùng nước lạnh/đá)<br>
+      6. (1) Đ; (2) Đ<br>
+      7. A, C, D
+    </p>
+    <h3>BÀI SINH HỌC 1</h3>
+    <p>
+      1. C<br>
+      2. (1) S; (2) Đ; (3) Đ<br>
+      3. C<br>
+      4. “màng trong ti thể”<br>
+      5. B (giảm đáng kể)<br>
+      6. (1) S; (2) Đ<br>
+      7. A, D
+    </p>
+    <h3>BÀI SINH HỌC 2</h3>
+    <p>
+      1. B<br>
+      2. (1) Đ; (2) S; (3) Đ<br>
+      3. A, B, D<br>
+      4. “nam giới nhiều hơn” (hoặc “nam giới dễ biểu hiện hơn”)<br>
+      5. C (50%)<br>
+      6. (1) Đ; (2) S<br>
+      7. A, C, D
+    </p>
+    <h3>BÀI SINH HỌC 3</h3>
+    <p>
+      1. B<br>
+      2. (1) Đ; (2) Đ; (3) S<br>
+      3. A, B, C<br>
+      4. “sức chứa môi trường” (hoặc “giới hạn môi trường”)<br>
+      5. B<br>
+      6. (1) S; (2) Đ<br>
+      7. A, C
+    </p>
+  </div>
+
+  ====================================== -->
+  
+  <!-- --------------------------
+       SCRIPT: TIMER, ĐIỀU HƯỚNG TRANG, ĐIỀU HƯỚNG CÂU HỎI,
+       CHỨC NĂNG ĐÁNH DẤU, DRAG & DROP, NỘP BÀI & KIỂM TRA ĐÁP ÁN
+  -------------------------- -->
+  <script>
+    /********** Timer (60 phút) **********/
+    let totalTime = 60 * 60;
+    const timerDisplay = document.getElementById('timer');
+    const submitBtn = document.getElementById('submit-btn');
+    let timerInterval = setInterval(() => {
+      let minutes = Math.floor(totalTime / 60);
+      let seconds = totalTime % 60;
+      timerDisplay.textContent = 'Thời gian: ' +
+        (minutes < 10 ? '0' + minutes : minutes) + ':' +
+        (seconds < 10 ? '0' + seconds : seconds);
+      if(totalTime <= 0) {
+        clearInterval(timerInterval);
+        timerDisplay.textContent = 'Hết giờ!';
+        submitExam(); // Nộp bài tự động nếu hết giờ
+      }
+      totalTime--;
+    }, 1000);
+    
+    /********** Điều hướng giữa các trang **********/
+    const pageNavButtons = document.querySelectorAll('#page-nav button');
+    const pages = document.querySelectorAll('.page');
+    pageNavButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        pageNavButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const pageId = btn.getAttribute('data-page');
+        pages.forEach(page => {
+          if(page.id === pageId) {
+            page.classList.add('active');
+          } else {
+            page.classList.remove('active');
+          }
+        });
+      });
+    });
+    
+    /********** Điều hướng đến câu hỏi trong mỗi trang **********/
+    const questionNavButtons = document.querySelectorAll('.question-nav button');
+    questionNavButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const targetElem = document.getElementById(targetId);
+        if(targetElem) {
+          targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+    
+    /********** Xử lý nút "Đánh dấu" **********/
+    const markButtons = document.querySelectorAll('.mark-btn');
+    markButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('marked');
+        const qId = btn.getAttribute('data-question');
+        const navBtn = document.querySelector(`.question-nav button[data-target="${qId}"]`);
+        if(navBtn) {
+          navBtn.classList.toggle('marked');
+        }
+      });
+    });
+    
+    /********** Drag & Drop cho các câu hỏi kéo–thả **********/
+    const dragItems = document.querySelectorAll('.drag-item');
+    dragItems.forEach(item => {
+      item.addEventListener('dragstart', dragStart);
+    });
+    const dropAreas = document.querySelectorAll('.drop-area');
+    dropAreas.forEach(area => {
+      area.addEventListener('dragover', dragOver);
+      area.addEventListener('drop', drop);
+    });
+    function dragStart(e) {
+      e.dataTransfer.setData('text/plain', e.target.id);
+    }
+    function dragOver(e) {
+      e.preventDefault();
+    }
+    function drop(e) {
+      e.preventDefault();
+      const id = e.dataTransfer.getData('text/plain');
+      const draggableElement = document.getElementById(id);
+      const dropArea = e.currentTarget;
+      if(dropArea.textContent.includes("Kéo")) {
+        dropArea.textContent = "";
+      }
+      dropArea.appendChild(draggableElement);
+    }
+    
+    /********** Các hàm kiểm tra đáp án **********/
+    function checkRadio(qId, correctAnswer) {
+      const question = document.getElementById(qId);
+      const feedback = question.querySelector('.feedback');
+      const selected = question.querySelector('input[type="radio"]:checked');
+      if(selected) {
+        if(selected.value === correctAnswer) {
+          feedback.textContent = "Đúng!";
+          feedback.classList.add("correct");
+          feedback.classList.remove("incorrect");
+        } else {
+          feedback.textContent = "Sai! Đáp án đúng là: " + correctAnswer;
+          feedback.classList.add("incorrect");
+          feedback.classList.remove("correct");
+        }
+      } else {
+        feedback.textContent = "Chưa chọn đáp án. Đáp án đúng là: " + correctAnswer;
+        feedback.classList.add("incorrect");
+        feedback.classList.remove("correct");
+      }
+    }
+    
+    function checkCheckbox(qId, correctAnswers) {
+      const question = document.getElementById(qId);
+      const feedback = question.querySelector('.feedback');
+      const checkboxes = question.querySelectorAll('input[type="checkbox"]');
+      let selectedValues = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+      selectedValues.sort();
+      const sortedCorrect = correctAnswers.slice().sort();
+      if(JSON.stringify(selectedValues) === JSON.stringify(sortedCorrect)) {
+        feedback.textContent = "Đúng!";
+        feedback.classList.add("correct");
+        feedback.classList.remove("incorrect");
+      } else {
+        feedback.textContent = "Sai! Đáp án đúng là: " + correctAnswers.join(", ");
+        feedback.classList.add("incorrect");
+        feedback.classList.remove("correct");
+      }
+    }
+    
+    function checkText(qId, correctAnswer) {
+      const question = document.getElementById(qId);
+      const feedback = question.querySelector('.feedback');
+      const input = question.querySelector('input[type="text"]');
+      if(input) {
+        const userAnswer = input.value.trim().toLowerCase();
+        if(userAnswer === correctAnswer.toLowerCase()) {
+          feedback.textContent = "Đúng!";
+          feedback.classList.add("correct");
+          feedback.classList.remove("incorrect");
+        } else {
+          feedback.textContent = "Sai! Đáp án đúng là: " + correctAnswer;
+          feedback.classList.add("incorrect");
+          feedback.classList.remove("correct");
+        }
+      }
+    }
+    
+    function checkTextarea(qId, correctAnswer) {
+      const question = document.getElementById(qId);
+      const feedback = question.querySelector('.feedback');
+      const textarea = question.querySelector('textarea');
+      if(textarea) {
+        const userAnswer = textarea.value.trim().toLowerCase();
+        if(userAnswer === correctAnswer.toLowerCase()) {
+          feedback.textContent = "Đúng!";
+          feedback.classList.add("correct");
+          feedback.classList.remove("incorrect");
+        } else {
+          feedback.textContent = "Sai! Đáp án đúng là: " + correctAnswer;
+          feedback.classList.add("incorrect");
+          feedback.classList.remove("correct");
+        }
+      }
+    }
+    
+function checkSelect(qId, correctAnswers) {
+  const question = document.getElementById(qId);
+  const feedback = question.querySelector('.feedback');
+  const selects = question.querySelectorAll('select');
+  let messages = [];
+  // Duyệt qua từng select (mỗi mệnh đề)
+  selects.forEach((sel, index) => {
+    if (!sel.value) {
+      // Nếu chưa chọn đáp án thì thông báo cùng với đáp án đúng
+      messages.push(`Phát biểu ${index + 1}: Chưa chọn đáp án. Đáp án đúng là ${correctAnswers[index]}.`);
+    } else if (sel.value === correctAnswers[index]) {
+      messages.push(`Phát biểu ${index + 1}: Đúng!`);
+    } else {
+      messages.push(`Phát biểu ${index + 1}: Sai! Đáp án đúng là ${correctAnswers[index]}.`);
+    }
+  });
+  // Hiển thị phản hồi: nếu tất cả mệnh đề đều đúng thì feedback hiển thị theo màu xanh,
+  // nếu có ít nhất 1 sai hoặc chưa chọn thì hiển thị theo màu đỏ.
+  feedback.textContent = messages.join(" ");
+  if (messages.every(msg => msg.includes("Đúng!"))) {
+    feedback.classList.add("correct");
+    feedback.classList.remove("incorrect");
+  } else {
+    feedback.classList.add("incorrect");
+    feedback.classList.remove("correct");
+  }
+}
+
+
+
+    
+    function submitExam() {
+      if(submitBtn.disabled) return;
+      submitBtn.disabled = true;
+      clearInterval(timerInterval);
+      // VẬT LÝ 1
+      checkRadio("q1-phy1", "A");
+      // Đối với dạng select của Q2, ta truyền mảng đáp án theo thứ tự
+      checkSelect("q2-phy1", ["Đ", "S", "Đ", "Đ"]);
+      checkCheckbox("q3-phy1", ["B","D"]);
+      checkText("q4-phy1", "một đường parabol");
+      checkRadio("q5-phy1", "C");
+      checkSelect("q6-phy1", ["Đ", "S", "Đ"]);
+      checkCheckbox("q7-phy1", ["A","C"]);
+      
+      // VẬT LÝ 2
+      checkRadio("q1-phy2", "B");
+      checkSelect("q2-phy2", ["S", "Đ", "S"]);
+      checkCheckbox("q3-phy2", ["A","B","C"]);
+      checkText("q4-phy2", "là dao động điều hòa");
+      checkRadio("q5-phy2", "B");
+      checkSelect("q6-phy2", ["S", "Đ"]);
+      checkCheckbox("q7-phy2", ["A","C"]);
+      
+      // VẬT LÝ 3
+      checkRadio("q1-phy3", "A");
+      checkText("q2-phy3", "bằng 1/√2");
+      checkSelect("q3-phy3", ["S", "S", "Đ"]);
+      checkCheckbox("q4-phy3", ["B","C","D"]);
+      checkRadio("q5-phy3", "B");
+      checkSelect("q6-phy3", ["Đ", "S"]);
+      checkText("q7-phy3", "sử dụng máy biến áp");
+      
+      // HÓA HỌC 1
+      checkRadio("q1-chem1", "B");
+      checkSelect("q2-chem1", ["Đ", "Đ", "S"]);
+      checkCheckbox("q3-chem1", ["A","C"]);
+      checkText("q4-chem1", "oxi hóa");
+      checkRadio("q5-chem1", "B");
+      checkSelect("q6-chem1", ["Đ", "S"]);
+      checkCheckbox("q7-chem1", ["A","B","D"]);
+      
+      // HÓA HỌC 2
+      checkRadio("q1-chem2", "C");
+      checkSelect("q2-chem2", ["Đ", "S", "Đ"]);
+      checkText("q3-chem2", "1 electron ngoài cùng");
+      checkRadio("q4-chem2", "C");
+      checkRadio("q5-chem2", "C");
+      checkSelect("q6-chem2", ["Đ", "Đ"]);
+      checkCheckbox("q7-chem2", ["A","C","D"]);
+      
+      // SINH HỌC 1
+      checkRadio("q1-bio1", "C");
+      checkSelect("q2-bio1", ["S", "Đ", "Đ"]);
+      checkRadio("q3-bio1", "C");
+      checkText("q4-bio1", "màng trong ti thể");
+      checkRadio("q5-bio1", "B");
+      checkSelect("q6-bio1", ["S", "Đ"]);
+      checkCheckbox("q7-bio1", ["A","D"]);
+      
+      // SINH HỌC 2
+      checkRadio("q1-bio2", "B");
+      checkSelect("q2-bio2", ["Đ", "S", "Đ"]);
+      checkRadio("q3-bio2", "D");
+      checkText("q4-bio2", "nam giới nhiều hơn");
+      checkRadio("q5-bio2", "C");
+      checkSelect("q6-bio2", ["Đ", "S"]);
+      checkCheckbox("q7-bio2", ["A","C","D"]);
+      
+      // SINH HỌC 3
+      checkRadio("q1-bio3", "B");
+      checkSelect("q2-bio3", ["Đ", "Đ", "S"]);
+      checkCheckbox("q3-bio3", ["A","B","C"]);
+      checkText("q4-bio3", "sức chứa môi trường");
+      checkRadio("q5-bio3", "B");
+      checkSelect("q6-bio3", ["S", "Đ"]);
+      checkCheckbox("q7-bio3", ["A","C"]);
+    }
+    
+    document.addEventListener('change', () => {
+      // Có thể cập nhật trạng thái "đã trả lời" cho nút điều hướng từng câu nếu cần
+    });
+    document.addEventListener('input', () => {
+      // Tương tự cho các input dạng text/textarea
+    });
+    
+    submitBtn.addEventListener('click', () => {
+      if(confirm('Bạn có chắc chắn muốn nộp bài?')) {
+        submitExam();
+      }
+    });
+    
+    // Hiển thị container khi load xong
+    document.getElementById('pages-container').style.display = 'block';
+  </script>
+</body>
+</html>

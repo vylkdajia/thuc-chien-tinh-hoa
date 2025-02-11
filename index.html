@@ -107,7 +107,10 @@
     localStorage.setItem('examChoice', examChoice);
 
     // Chuyển trang dựa trên lựa chọn đề thi
-    if (examChoice > 100) {
+    if (examChoice > 200) {
+	window.location.href = `TSA_KH_De_${examChoice}.html`;
+    }
+    else if (examChoice > 100) {
 	window.location.href = "Doc_hieu.html";
     }
     else if (examChoice === 0) {
@@ -154,6 +157,8 @@
 		<option value="-2">Đề thi 2 (HSA - Toán học)</option>
 
 		<option value="101">Đề thi 1(TSA - Đọc Hiểu)</option>
+
+		<option value="201">Đề thi 1(TSA - Khoa Học)</option>
 
             </select><br>
 
