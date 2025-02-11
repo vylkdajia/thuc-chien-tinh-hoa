@@ -1,0 +1,46 @@
+Đọc văn bản và trả lời câu hỏi từ 1 đến 10:
+CÔNG NGHỆ GIÁO DỤC: MỐI QUAN TÂM MỚI VÀ NHỮNG SÁNG KIẾN MỚI
+[1] "Tại diễn đàn Vietnam Educamp 2019 mới đây, có đến gần 1/3 số tham luận bàn về chủ đề công nghệ giáo dục (edtech)
+với ba mối quan tâm rõ nét: xu hướng cá nhân hóa, xu hướng chuyển đổi số, và những băn khoăn trước thềm Công nghiệp
+4.0.”
+[2] Ước mơ về giáo dục cá nhân hóa đã có từ lâu. Nhưng chỉ gần đây, khi công nghệ giáo dục phát triển, các nhà giáo mới
+được trao một phương tiện mạnh mẽ để hiện thực hóa điều đó với chi phí giảm thiểu đáng kể. Cá nhân tôi hết sức chú ý đến
+hai tham luận, một của thầy giáo vật lý Nguyễn Thành Nam, người không ngừng tìm tòi và thể nghiệm các cách thức dạy
+học tốt hơn và một của nhà nghiên cứu giáo dục Trần Thị Thu Hương.
+[3] Với kinh nghiệm gần chục năm giảng dạy trực tuyến trên các nền tảng khác nhau, TS Nguyễn Thành Nam, Phòng
+Nghiên cứu và Phát triển của hệ thống giáo dục Hocmai.vn, đã chia sẻ những câu chuyện sinh động về cách biến các công
+nghệ hiện đại thành trợ thủ đắc lực cho việc giảng dạy của mình. TS Nam gợi ý, thầy cô nào cũng có thể sử dụng chiếc máy
+tính của mình để ghi lại các bài giảng, chuyển lên một nền tảng giảng dạy trực tuyến và kết hợp với việc giảng dạy trên lớp
+để tiết kiệm công sức, đồng thời tăng cao hiệu quả. Việc giảng dạy trực tuyến toàn bộ hoặc giảng dạy hỗn hợp (blended
+learning) cũng giúp cho học sinh được học theo tốc độ của riêng mình, được tự do lựa chọn bài học ưa thích và phù hợp với
+trình độ.
+[4] Trong khi đó, TS Trần Thị Thu Hương từ trường Đại học Giáo dục, Đại học Quốc gia Hà Nội mang đến những kinh
+nghiệm sử dụng công nghệ giáo dục từ Israel để giải quyết các vấn đề cố hữu của giáo dục truyền thống như một-giáo-trìnhcho-tất-cả, hình thức giảng bài nhàm chán, việc đánh giá quá muộn và ít có giá trị thúc đẩy học tập, chương trình lạc hậu ít
+cập nhật... Những nền tảng giảng dạy số hóa (digital teaching platform) sẽ cho phép chương trình giáo dục được số hóa và
+chuyển tải thông qua hệ thống phần mềm hiện đại, kết hợp với việc giảng dạy trên lớp, từ đó mang lại trải nghiệm riêng biệt
+cho từng học sinh. Việc đánh giá được thực hiện liên tục để cung cấp phản hồi mau chóng về hiệu quả học tập, và phần
+mềm thông minh tự đưa ra các lời khuyên để học sinh và giáo viên có thể lựa chọn các hoạt động học tập tiếp theo nhằm
+thúc đẩy hiệu quả học tập. Bằng sự kết hợp giữa tự học 1:1 với máy tính và việc giảng dạy trực tiếp, giáo viên có thể loại bỏ
+phần lớn nhược điểm của hình thức giảng dạy kiểu thầy đọc-trò chép truyền thống, dễ dàng cập nhật nội dung giảng dạy để
+thu hút sự chú ý của học sinh, cũng như cập nhật các tri thức mới, có ý nghĩa hơn với cuộc sống.
+[5] Các thuyết trình tại Vietnam Educamp 2019 cũng cho thấy, giới công nghệ giáo dục tại Việt Nam đã nhanh chóng nắm
+bắt được xu hướng chuyển đổi số (digital transformation) đang phát triển mạnh mẽ trên thế giới, và tích cực đưa ra những
+sáng kiến mới.
+[6] Chẳng hạn, ThS Nguyễn Khắc Nhật từ CodeGym giới thiệu mô hình trại huấn luyện lập trình (Coding Bootcamp) nhằm
+đào tạo lại hoặc đào tạo chuyển nghề cho người trưởng thành để nhanh chóng tham gia vào ngành công nghiệp phần mềm.
+Ông Nhật cho biết, hệ thống CodeGym có thể giúp một người đi làm học được nghề lập trình trong vòng 4 tháng. Để thực
+hiện được điều đó, cần phải thay đổi tư duy về cách làm đào tạo. Thay vì học rải rác, học viên được tập trung học 8 tiếng
+mỗi ngày như người đi làm, tự học trên hệ thống học tập số hóa được nghiên cứu và phát triển bài bản, kết hợp với sự
+hướng dẫn từ giảng viên các các chuyên gia trong ngành. Ngoài ra, sự kết hợp chặt chẽ với doanh nghiệp phần mềm từ khâu
+xây dựng chương trình đào tạo, tới việc giảng dạy, và đánh giá năng lực chính là khâu đột phá để đảm bảo mỗi học viên đều
+học được, và làm được việc khi tốt nghiệp. Mô hình Coding Bootcamp như CodeGym đang triển khai đã được Ngân hàng
+Thế giới khuyến cáo như một gợi ý tốt để giải quyết tình trạng thiếu hụt trầm trọng nguồn nhân lực công nghệ thông tin trên
+quy mô toàn cầu.
+[7] Thạc sĩ Hoàng Giang Quỳnh Anh và Trần Huyền Chi từ Agilearn.vn, nền tảng đào tạo số hóa cho doanh nghiệp, giới
+thiệu một sáng kiến khác - mô hình học tập micro-learning cho người đi làm. Theo đại diện của Agilearn, việc học tập cần
+phải phù hợp với tình hình bận rộn, thói quen sử dụng công nghệ và làm việc đa nhiệm hiện nay. Những bài học nên ngắn
+gọn, chỉ từ 2-7 phút. Nhưng bù lại, việc học nên diễn ra thường xuyên hơn, có tính phản hồi hơn. Hình thức học tập đó sẽ
+giúp người học tiết kiệm thời gian, nhất là những khoảng thời gian rảnh rỗi vốn ít ỏi của người đi làm. Những giải pháp học
+tập số hóa được thiết kế tốt, phù hợp với tâm lí người đi làm sẽ thúc đẩy việc học tập suốt đời, mang đến gợi ý tốt về một xã
+hội học tập đích thực.
+Theo Dương Trọng Tấn (CEO Tổ hợp giáo dục Agilead Global)

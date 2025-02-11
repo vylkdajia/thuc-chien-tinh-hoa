@@ -1,0 +1,47 @@
+Đọc văn bản và trả lời câu hỏi từ 11 đến 20:
+VIỆT NAM CHẾ TẠO THÀNH CÔNG MÁY THU ĐỊNH VỊ TOÀN CẦU GNSS
+Trang 4/6
+[1] Lần đầu tiên, Việt Nam chế tạo thành công máy thu định vị toàn cầu GNSS với nhiều tính năng mới, nổi bật, có khả
+năng ứng dụng rộng rãi trong nhiều ngành như hàng không, quốc phòng, giao thông thủy, giao thông minh, máy bay không
+người lái.
+[1] Lần đầu tiên, Việt Nam chế tạo thành công máy thu định vị toàn cầu GNSS với nhiều tính năng mới, nổi bật, có khả
+năng ứng dụng rộng rãi trong nhiều ngành như hàng không, quốc phòng, giao thông thủy, giao thông minh, máy bay không
+người lái.
+[2] Theo PGS.TS Nguyễn Hữu Trung, Phó Viện trưởng Viện Điện tử - Viễn thông của Trường Đại học Bách khoa Hà Nội,
+các nước có nền kinh tế, công nghiệp vũ trụ và quốc phòng mạnh trên thế giới đều đầu tư phát triển hệ thống định vị toàn
+cầu mạnh mẽ trong những năm qua.
+[3] Cùng với đó là sự phát triển của công nghệ định vị dựa trên hệ thống vệ tinh định vị toàn cầu (Global Navigation
+Satellite System – GNSS). Đây là công nghệ cho phép xác định các thông tin vị trí của người sử dụng tại bất kỳ điểm nào
+trên mặt đất. GNSS đóng vai trò quan trọng trong nhiều khía cạnh của cuộc sống, từ quốc phòng đến giao thông vận tải, cứu
+hộ cứu nạn, trắc địa bản đồ, dẫn đường hàng hải, hàng không.
+[4] Tại Việt Nam những năm qua, các ứng dụng liên quan đến hệ thống định vị vệ tinh toàn cầu được triển khai trong rất
+nhiều lĩnh vực liên quan đến đời sống kinh tế và xã hội như ứng dụng trong đo đạc bản đồ và thu thập các thông tin địa lý,
+quản lý đất đai và môi trường, hỗ trợ định vị và tìm kiếm trong các trường hợp khẩn cấp như bão, động đất, lũ. Quản lý vị
+trí của hệ thống giao thông như hệ thống xe buýt, xe cấp cứu, cứu hoả, điều hành hệ thống taxi.
+[5] Tuy nhiên, việc nghiên cứu phát triển kiến trúc các bộ thu vô tuyến, bao gồm bộ thu GNSS ở Việt Nam còn hạn chế. Vì
+vậy, trong khuôn khổ chương trình Nghị định thư của Bộ Khoa học và Công nghệ, Trường Đại học Bách khoa Hà Nội phối
+hợp Trường Đại học Milano của Ý triển khai nghiên cứu phát triển máy thu định vị toàn cầu GNSS đa kênh dựa trên kỹ
+thuật đổi tần trực tiếp và hệ thống anten thông minh.
+[6] Trong hai năm, các nhà khoa học của Đại học Bách Khoa Hà Nội phối hợp với Đại học Milano của Ý, do GS Riccardo
+Enrico Zich - tác giả của nhiều công bố khoa học trong lĩnh vực này đã chế tạo thành công thiết bị mẫu (prototype) bộ thu
+GNSS đa kênh tích hợp hệ anten thông minh. Đây là lần đầu tiên, Việt Nam có thiết bị này. Trên thế giới, số lượng các thiết
+bị này cũng không nhiều. Thành công này mở ra nhiều cơ hội ứng dụng công nghệ định vị vệ tinh trong phát triển kinh tế xã
+hội.
+[7] PGS Nguyễn Hữu Trung chia sẻ, một trong những ứng dụng quan trọng có thể triển khai ngay là giao thông đô thị. “Mục
+tiêu mà nhiệm vụ đặt ra là phát triển bộ thu định vị có khả năng hỗ trợ giao thông đô thị. Nhiệm vụ này có thể coi là một đề
+án tiền khả thi cho việc hiện đại hóa và việc ứng dụng các hệ thống công nghệ thông tin và truyền thông vào lĩnh vực giao
+thông đô thị nói riêng cũng như trong các lĩnh vực khác của đời sống nói chung”, PGS Trung nói.
+[8] PGS Trung cho biết thêm, quy trình công nghệ thiết kế chế tạo thiết bị và dịch vụ định vị độ bền vững cao chứa đựng
+hàm lượng chất xám công nghệ lớn. Do đó, nếu được phát triển thành thương phẩm thì có khả năng cạnh tranh giá thành và
+chất lượng đáp ứng yêu cầu.
+[9] Nhóm nghiên cứu hướng đến các ngành ứng dụng cụ thể gồm hàng không, quốc phòng, giao thông đường thủy và thủy
+quân, xây dựng, mỏ và công nghiệp, giao thông thông minh (ITS), các dịch vụ an ninh công cộng (Public services), điều
+phối khi xảy ra tai nạn, phối hợp tác chiến, dịch vụ cung cấp thời gian chính xác. Dịch vụ LBS (cung cấp vị trí trong mọi
+điều kiện) và phương tiện bay không người lái UAV.
+[10] “Chúng tôi đang hướng đến nhiều hình thức chuyển giao công nghệ như chuyển giao công nghệ trọn gói, chuyển giao
+công nghệ có đào tạo, chuyển giao theo hình thức trả dần theo tỷ lệ % doanh thu, liên kết với doanh nghiệp để sản xuất hoặc
+góp vốn hoặc tự thành lập doanh nghiệp trên cơ sở kết quả nghiên cứu tạo ra”, ông Trung nói.
+[11] Cùng với khả năng ứng dụng thực tế, sản phẩm cũng đóng góp phát triển công nghệ định vị vệ tinh đa kênh, đóng góp
+một kiến trúc mới về công nghệ phát triển các bộ thu GNSS, đóng góp một phương pháp thu đa kênh dùng anten thông
+minh, giúp đất nước sở hữu một số công nghệ ứng dụng quan trọng trong thông tin viễn thông và lĩnh vực thiết kế chế tạo
+thiết bị vô tuyến.

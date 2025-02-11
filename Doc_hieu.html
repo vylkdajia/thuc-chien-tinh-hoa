@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tư duy đọc hiểu</title>
+  <style>
+    /* Reset và định dạng chung */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header img {
+      max-height: 50px;
+      margin-right: 10px;
+    }
+    header a {
+      text-decoration: none;
+      color: #ffffff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    header .global-timer {
+      font-size: 18px;
+    }
+    .container {
+      padding: 20px;
+    }
+    /* Phần chuyển đổi giữa 2 bài thi (tab) */
+    .tabs {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .tabs button {
+      padding: 10px 20px;
+      border: none;
+      background: #ccc;
+      margin-right: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .tabs button.active {
+      background: #666;
+      color: #fff;
+    }
+    .exam-section {
+      display: none;
+    }
+    .exam-section.active {
+      display: block;
+    }
+    /* Layout nội dung trong mỗi bài thi */
+    .exam-content {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .reading-passages {
+      flex: 1 1 300px;
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ccc;
+      height: 400px;
+      overflow-y: auto;
+    }
+    /* Trong phần đọc, thay vì dùng thẻ p cố định ta dùng .reading-text để chứa nội dung được load từ file */
+    .reading-passages .reading-text {
+      white-space: pre-wrap;
+    }
+    .question-area {
+      flex: 1 1 300px;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ccc;
+      height: 400px;
+    }
+    .question-display {
+      flex: 1;
+      text-align: center;
+      overflow-y: auto;
+    }
+    .question-display img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .answer-section {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .answer-section input[type="text"] {
+      flex: 1;
+      padding: 5px;
+      font-size: 16px;
+    }
+    .navigation {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navigation button {
+      padding: 5px 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .question-timer {
+      font-size: 16px;
+    }
+    /* Phần nút Nộp bài */
+    .submit-section {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .submit-section button {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    /* Trang tổng kết */
+    #summary {
+      display: none;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+    #summary h2, #summary h3 {
+      text-align: center;
+    }
+    #summary table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+    }
+    #summary table, #summary th, #summary td {
+      border: 1px solid #ccc;
+    }
+    #summary th, #summary td {
+      padding: 8px;
+      text-align: center;
+    }
+    /* Phần PDF đáp án */
+    .pdf-section {
+      text-align: center;
+      margin-top: 20px;
+    }
+    #pdf-viewer {
+      display: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header với tiêu đề và bộ đếm thời gian toàn bài (40 phút) -->
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="Logo Trang Chủ">
+      <span>Trang Chủ</span>
+    </a>
+    <h1>Tư duy đọc hiểu</h1>
+    <div class="global-timer">Thời gian còn lại: <span id="global-timer">40:00</span></div>
+  </header>
+
+  <div class="container">
+    <!-- Phần đề thi với 2 bài thi (Bài 1 và Bài 2) -->
+    <div class="tabs">
+      <button class="tab-button active" data-exam="exam1">Bài 1</button>
+      <button class="tab-button" data-exam="exam2">Bài 2</button>
+    </div>
+
+    <!-- Bài thi 1 -->
+    <div class="exam-section active" id="exam1">
+      <div class="exam-content">
+        <!-- Phần bài đọc (nội dung được load từ tệp bai_doc_1.txt) -->
+        <div class="reading-passages">
+          <h2>Bài đọc</h2>
+          <div class="reading-text">Đang tải bài đọc...</div>
+        </div>
+        <!-- Phần câu hỏi -->
+        <div class="question-area">
+          <div class="question-display">
+            <img id="exam1-question-image" src="" alt="Câu hỏi 1">
+          </div>
+          <div class="answer-section">
+            <label for="exam1-answer">Đáp án:</label>
+            <input type="text" id="exam1-answer" placeholder="Nhập đáp án của bạn">
+          </div>
+          <div class="navigation">
+            <button id="exam1-prev">Câu trước</button>
+            <div class="question-timer">
+              Thời gian làm câu: <span id="exam1-question-timer">00:00</span>
+            </div>
+            <button id="exam1-next">Câu sau</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bài thi 2 -->
+    <div class="exam-section" id="exam2">
+      <div class="exam-content">
+        <!-- Phần bài đọc (nội dung được load từ tệp bai_doc_2.txt) -->
+        <div class="reading-passages">
+          <h2>Bài đọc</h2>
+          <div class="reading-text">Đang tải bài đọc...</div>
+        </div>
+        <!-- Phần câu hỏi -->
+        <div class="question-area">
+          <div class="question-display">
+            <img id="exam2-question-image" src="" alt="Câu hỏi 1">
+          </div>
+          <div class="answer-section">
+            <label for="exam2-answer">Đáp án:</label>
+            <input type="text" id="exam2-answer" placeholder="Nhập đáp án của bạn">
+          </div>
+          <div class="navigation">
+            <button id="exam2-prev">Câu trước</button>
+            <div class="question-timer">
+              Thời gian làm câu: <span id="exam2-question-timer">00:00</span>
+            </div>
+            <button id="exam2-next">Câu sau</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nút Nộp bài -->
+    <div class="submit-section">
+      <button id="submit-button">Nộp bài</button>
+    </div>
+
+    <!-- Trang tổng kết (ẩn ban đầu) -->
+    <div id="summary">
+      <h2>Tổng kết câu trả lời</h2>
+      <div id="summary-content">
+        <!-- Nội dung tổng kết sẽ được tạo bởi JavaScript -->
+      </div>
+      <!-- Phần PDF đáp án -->
+      <div class="pdf-section">
+        <button id="view-pdf-button">Xem PDF đáp án</button>
+        <div id="pdf-viewer">
+          <!-- File PDF được nhúng từ thư mục đề -->
+          <iframe id="pdf-iframe" src="" width="100%" height="600px" frameborder="0"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script: xử lý timer, chuyển câu, lưu đáp án, xác nhận nộp bài, hiển thị trang tổng kết và load bài đọc từ file -->
+  <script>
+    /***** Lấy biến examChoice từ URL (ví dụ: ?examChoice=1) *****/
+    const urlParams = new URLSearchParams(window.location.search);
+    const examChoice = localStorage.getItem('examChoice');
+
+    /***** Global timer: 40 phút *****/
+    let globalTime = 40 * 60; // 40 phút tính bằng giây
+    const globalTimerDisplay = document.getElementById('global-timer');
+    const globalTimerInterval = setInterval(() => {
+      let minutes = Math.floor(globalTime / 60);
+      let seconds = globalTime % 60;
+      globalTimerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      if (globalTime <= 0) {
+        clearInterval(globalTimerInterval);
+        alert('Hết giờ làm bài thi!');
+        // Bạn có thể thêm chức năng tự động nộp bài ở đây.
+      }
+      globalTime--;
+    }, 1000);
+
+    /***** Cấu hình dữ liệu cho từng bài thi *****
+     * File hình ảnh:
+     * - Bài 1: Đường dẫn = "De_<examChoice>/b1_c{questionNumber}.png"
+     * - Bài 2: Đường dẫn = "De_<examChoice>/b2_c{questionNumber}.png"
+     */
+    const examData = {
+      exam1: {
+        currentQuestion: 1,
+        totalQuestions: 10,
+        prefix: `De_${examChoice}/b1_c`,
+        questionTimerInterval: null,
+        questionTime: 0,
+        answers: {}
+      },
+      exam2: {
+        currentQuestion: 1,
+        totalQuestions: 10,
+        prefix: `De_${examChoice}/b2_c`,
+        questionTimerInterval: null,
+        questionTime: 0,
+        answers: {}
+      }
+    };
+
+    // Hàm lưu đáp án của câu hiện tại cho bài đã cho
+    function storeAnswer(examId) {
+      const answerInput = document.getElementById(`${examId}-answer`);
+      examData[examId].answers[examData[examId].currentQuestion] = answerInput.value.trim();
+    }
+
+    // Hàm cập nhật câu hỏi cho bài thi (hiển thị hình ảnh và đáp án đã lưu)
+    function updateQuestion(examId) {
+      const exam = examData[examId];
+      const imgElement = document.getElementById(`${examId}-question-image`);
+      imgElement.src = `${exam.prefix}${exam.currentQuestion}.png`;
+      imgElement.alt = `Câu hỏi ${exam.currentQuestion}`;
+      const answerInput = document.getElementById(`${examId}-answer`);
+      answerInput.value = exam.answers[exam.currentQuestion] || "";
+      resetQuestionTimer(examId);
+    }
+
+    // Hàm reset bộ đếm thời gian cho câu hiện hành
+    function resetQuestionTimer(examId) {
+      const exam = examData[examId];
+      exam.questionTime = 0;
+      const timerDisplay = document.getElementById(`${examId}-question-timer`);
+      timerDisplay.textContent = '00:00';
+      if (exam.questionTimerInterval) {
+        clearInterval(exam.questionTimerInterval);
+      }
+      exam.questionTimerInterval = setInterval(() => {
+        exam.questionTime++;
+        let minutes = Math.floor(exam.questionTime / 60);
+        let seconds = exam.questionTime % 60;
+        timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    /***** Xử lý sự kiện chuyển câu cho Bài 1 *****/
+    document.getElementById('exam1-prev').addEventListener('click', () => {
+      storeAnswer('exam1');
+      if (examData.exam1.currentQuestion > 1) {
+        examData.exam1.currentQuestion--;
+        updateQuestion('exam1');
+      }
+    });
+    document.getElementById('exam1-next').addEventListener('click', () => {
+      storeAnswer('exam1');
+      if (examData.exam1.currentQuestion < examData.exam1.totalQuestions) {
+        examData.exam1.currentQuestion++;
+        updateQuestion('exam1');
+      }
+    });
+
+    /***** Xử lý sự kiện chuyển câu cho Bài 2 *****/
+    document.getElementById('exam2-prev').addEventListener('click', () => {
+      storeAnswer('exam2');
+      if (examData.exam2.currentQuestion > 1) {
+        examData.exam2.currentQuestion--;
+        updateQuestion('exam2');
+      }
+    });
+    document.getElementById('exam2-next').addEventListener('click', () => {
+      storeAnswer('exam2');
+      if (examData.exam2.currentQuestion < examData.exam2.totalQuestions) {
+        examData.exam2.currentQuestion++;
+        updateQuestion('exam2');
+      }
+    });
+
+    /***** Chuyển đổi giữa Bài 1 và Bài 2 theo tab *****/
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Lưu đáp án của bài hiện đang hiển thị trước khi chuyển tab
+        const currentExamId = document.querySelector('.exam-section.active').id;
+        storeAnswer(currentExamId);
+        // Đổi trạng thái active cho tab
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        // Ẩn tất cả các phần bài thi, hiển thị phần tương ứng
+        document.querySelectorAll('.exam-section').forEach(section => section.classList.remove('active'));
+        const examId = button.getAttribute('data-exam');
+        document.getElementById(examId).classList.add('active');
+      });
+    });
+
+    // Khởi tạo câu hỏi ban đầu cho cả hai bài
+    updateQuestion('exam1');
+    updateQuestion('exam2');
+
+    /***** Xử lý nút "Nộp bài" với xác nhận *****/
+    document.getElementById("submit-button").addEventListener("click", () => {
+      // Lấy thời gian còn lại từ globalTime
+      let minutes = Math.floor(globalTime / 60);
+      let seconds = globalTime % 60;
+      let formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      if (confirm(`Bạn có chắc chắn nộp bài không ? Bạn còn ${formattedTime} làm bài nữa.`)) {
+        // Lưu đáp án của câu hiện tại của bài đang hiển thị
+        const activeExam = document.querySelector('.exam-section.active').id;
+        storeAnswer(activeExam);
+        // Ẩn phần đề thi và nút nộp bài
+        document.querySelector('.tabs').style.display = "none";
+        document.querySelectorAll('.exam-section').forEach(section => {
+          section.style.display = "none";
+        });
+        document.querySelector('.submit-section').style.display = "none";
+        // Sinh trang tổng kết đáp án
+        generateSummary();
+        document.getElementById("summary").style.display = "block";
+      }
+    });
+
+    // Hàm tạo nội dung trang tổng kết đáp án cho cả 2 bài thi
+    function generateSummary() {
+      let summaryHTML = "";
+      for (let examId in examData) {
+        const exam = examData[examId];
+        const examName = examId === "exam1" ? "Bài 1" : "Bài 2";
+        summaryHTML += `<h3>${examName}</h3>`;
+        summaryHTML += `<table>
+                          <thead>
+                            <tr>
+                              <th>Câu</th>
+                              <th>Đáp án</th>
+                            </tr>
+                          </thead>
+                          <tbody>`;
+        for (let i = 1; i <= exam.totalQuestions; i++) {
+          const answer = exam.answers[i] || "";
+          summaryHTML += `<tr>
+                            <td>Câu ${i}</td>
+                            <td>${answer}</td>
+                          </tr>`;
+        }
+        summaryHTML += `</tbody></table>`;
+      }
+      document.getElementById("summary-content").innerHTML = summaryHTML;
+    }
+
+    /***** Xử lý nút "Xem PDF đáp án" *****/
+    document.getElementById("view-pdf-button").addEventListener("click", () => {
+      const pdfViewer = document.getElementById("pdf-viewer");
+      // Toggle hiển thị iframe PDF
+      pdfViewer.style.display = pdfViewer.style.display === "none" ? "block" : "none";
+    });
+
+    /***** Đặt src cho iframe PDF đáp án từ file answer.pdf trong thư mục đề *****/
+    document.getElementById("pdf-iframe").src = `De_${examChoice}/answer.pdf`;
+
+function loadReadingPassage(examId, filePath) {
+  fetch(filePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Không thể tải bài đọc từ: ${filePath} (Lỗi HTTP: ${response.status})`);
+      }
+      return response.text();
+    })
+    .then(text => {
+      const container = document.querySelector(`#${examId} .reading-text`);
+      if (container) {
+        container.textContent = text;
+      }
+    })
+    .catch(error => {
+      console.error("Lỗi khi tải bài đọc:", error);
+      const container = document.querySelector(`#${examId} .reading-text`);
+      if (container) {
+        container.textContent = `Lỗi: Không thể tải bài đọc.\nKiểm tra đường dẫn hoặc thử chạy trên máy chủ cục bộ.\nChi tiết lỗi: ${error.message}`;
+      }
+    });
+}
+
+// Load bài đọc cho mỗi bài thi
+loadReadingPassage('exam1', `De_${examChoice}/bai_doc_1.txt`);
+loadReadingPassage('exam2', `De_${examChoice}/bai_doc_2.txt`);
+  </script>
+</body>
+</html>
