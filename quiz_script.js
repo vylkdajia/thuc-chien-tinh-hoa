@@ -7,6 +7,7 @@ const questionFolders = [
     { numQuestions: 40, folderName: 'TSA_De_6' },
     { numQuestions: 40, folderName: 'TSA_De_7' },
     { numQuestions: 25, folderName: 'TSA_De_10' }, 
+    { numQuestions: 25, folderName: 'TSA_De_11' },
 
     { numQuestions: 50, folderName: 'HSA_De_1' },
     { numQuestions: 50, folderName: 'HSA_De_2' },

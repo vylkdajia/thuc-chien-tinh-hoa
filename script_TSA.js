@@ -329,7 +329,14 @@ const videos = {
     ], 
     "7": [
         { id: "GGciIMrCQLw", title: "Chữa đề phần 1" }
+    ],
+    "10": [
+	{ id: "mY1wm0S0xMY", title: "Chữa đề"}
+    ],
+    "11": [
+	{ id: "6WDMRfMCGiw", title: "Chữa đề"}
     ]
+
 };
 
 // Tạo danh sách video tương ứng với đề thi đã chọn
